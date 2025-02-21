@@ -43,7 +43,23 @@ function ReservationDatePicker() {
   //     range.from && range.to ? [range?.from, range?.to] : undefined;
 
   return (
-    <div className="w-fit absolute left-1/2 -translate-x-1/2 top-[440px] min-h-[476px] flex flex-col items-center justify-end">
+    <div className="w-fit absolute left-1/2 -translate-x-1/2 top-[90%] flex flex-col items-center justify-end">
+      <Button
+        onClick={() => setShowCalendar((prev) => !prev)}
+        className="text-xl flex gap-4 px-8 my-2 border font-sans"
+      >
+        {range?.from && range?.to
+          ? `${format(range.from, "dd.MM.yyyy")} / ${format(
+              range.to,
+              "dd.MM.yyyy"
+            )}`
+          : "VERIFICA DISPONIBILITATE"}
+        <span>
+          {" "}
+          {numNights ? ` ${numNights} Nopti ` : null} -{" "}
+          {numNights ? `  Pret: ${numNights * 900} RON` : null}
+        </span>
+      </Button>
       {showCalendar && (
         <div className="w-fit  p-4  sm:p-12 bg-secondary/80 items-center z-10 rounded-[12px] outline outline-1 outline-offset-[-8px] outline-primary ">
           <DayPicker
@@ -64,23 +80,6 @@ function ReservationDatePicker() {
           </Button>
         </div>
       )}
-
-      <Button
-        onClick={() => setShowCalendar((prev) => !prev)}
-        className="text-xl flex gap-4 px-8 my-2 border mt-8 font-sans"
-      >
-        {range?.from && range?.to
-          ? `${format(range.from, "dd.MM.yyyy")} / ${format(
-              range.to,
-              "dd.MM.yyyy"
-            )}`
-          : "VERIFICA DISPONIBILITATE"}
-        <span>
-          {" "}
-          {numNights ? ` ${numNights} Nopti ` : null} -{" "}
-          {numNights ? `  Pret: ${numNights * 900} RON` : null}
-        </span>
-      </Button>
     </div>
   );
 }

@@ -35,9 +35,9 @@ export default function Home() {
             Lasă în urmă agitația orașului și bucură-te de liniștea munților,
             intr-o cabana din lemn, pe malul râului Toplița.
           </p>
-        </div>
-        <div className="">
-          <ReservationDayPicker />
+          <div className="">
+            <ReservationDayPicker />
+          </div>
         </div>
       </section>
 
