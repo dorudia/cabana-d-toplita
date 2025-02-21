@@ -130,3 +130,29 @@ export const searchUserInDBAndSendEmail = async (session) => {
     });
   }
 };
+
+export const getUserReservations = async (email) => {
+  console.log("email", email);
+  let { data: userReservations, error } = await supabase
+    .from("users")
+    .select(`*, rezervari(*)`)
+    .eq("email", email);
+
+  if (error) {
+    console.log("error", error);
+  }
+
+  return userReservations;
+};
+
+export const getReservations = async () => {
+  console.log("getAllReservations");
+  let { data: rezervari, error } = await supabase.from("rezervari").select("*");
+
+  if (error) {
+    console.log("error:", error);
+  }
+  return rezervari;
+};
+
+// console.log("getReservations::", getReservations());

@@ -430,8 +430,8 @@
 
 .rdp {
   --rdp-cell-size: 32px !important;
-  --rdp-accent-color: #b25f06 !important;
-  --rdp-background-color: #b25f06 !important;
+  --rdp-accent-color: #00b90c !important;
+  --rdp-background-color: #00b90c !important;
   margin: 0 !important;
 }
 
@@ -445,8 +445,8 @@
   border-radius: 0% !important;
   background: linear-gradient(
     to bottom right,
-    transparent 50%,
-    #b25f06 50%
+    #b25f0600 30%,
+    #00b90c 30%
   ) !important;
 }
 
@@ -458,7 +458,7 @@
   border-radius: 0% !important;
   background: linear-gradient(
     to bottom right,
-    #b25f06 50%,
-    transparent 50%
+    #00b90c 70%,
+    transparent 70%
   ) !important;
 }
