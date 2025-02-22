@@ -29,13 +29,16 @@ import { Button } from "./ui/button";
 //   }
 // }
 
-function isAlreadyBooked(range, bookedDates) {
+function isAlreadyBooked(range, datesArr) {
   if (!range?.from || !range?.to) return false;
 
-  const selectedDays = eachDayOfInterval({ start: range.from, end: range.to });
-
-  return bookedDates.some(({ from, to }) =>
-    selectedDays.some((day) => isWithinInterval(day, { start: from, end: to }))
+  return datesArr.some(({ from, to }) =>
+    eachDayOfInterval({ start: from, end: to }).some(
+      (date) =>
+        isWithinInterval(date, { start: range.from, end: range.to }) &&
+        !isSameDay(range.from, to) && // Permite ca range.from să fie endDay
+        !isSameDay(range.to, from) // Permite ca range.to să fie startDay
+    )
   );
 }
 
@@ -44,6 +47,8 @@ function ReservationDatePicker() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [allReservations, setAllReservations] = useState([]);
   const [range, setRange] = useState((from, to) => {
+    console.log("range-from:", from, "range-to:", to);
+
     if (from === to) return;
     return { from: undefined, to: undefined };
   });
