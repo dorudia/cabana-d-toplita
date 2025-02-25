@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import FacebookProvider from "next-auth/providers/facebook";
+const isDevelopment = process.env.NODE_ENV === "development";
 
 const authConfig = {
   providers: [
