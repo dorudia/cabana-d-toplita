@@ -40,6 +40,9 @@ const authConfig = {
       },
     }),
   ],
+  pages: {
+    signIn: "/login", // Asigură-te că ai o pagină de login
+  },
   callbacks: {
     async redirect({ url, baseUrl }) {
       return baseUrl;
