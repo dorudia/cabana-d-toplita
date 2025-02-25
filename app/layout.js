@@ -10,6 +10,8 @@ import {
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
 import Providers from "../components/Provider";
+import { getSettings } from "./lib/actions";
+import { Toaster } from "../@/components/ui/sonner";
 
 const greatVibes = Great_Vibes({
   variable: "--font-great-vibes",
@@ -66,6 +68,7 @@ export default function RootLayout({ children }) {
             <main className="mx-auto dark:bg:slate-900 text-slate-foreground ">
               {children}
             </main>
+            <Toaster />
           </Providers>
         </ThemeProvider>
       </body>

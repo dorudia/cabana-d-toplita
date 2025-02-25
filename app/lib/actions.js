@@ -55,6 +55,17 @@ export async function signOutAction() {
   redirect("/");
 }
 
+export async function getSettings() {
+  let { data: settings, error } = await supabase.from("settings").select("*");
+
+  if (error) {
+    console.log("error", error);
+  }
+  if (settings && settings.length > 0) {
+    return settings[0];
+  }
+}
+
 // Check if user exists
 export async function findUserInDB(formData, checkPasswordMatch) {
   const enteredEmail = formData?.get("email");
@@ -155,4 +166,14 @@ export const getReservations = async () => {
   return rezervari;
 };
 
-// console.log("getReservations::", getReservations());
+export const addNewReservationToDB = async (rezervare) => {
+  console.log("rezervare::::", rezervare);
+  const { data, error } = await supabase
+    .from("rezervari")
+    .insert({ ...rezervare })
+    .select();
+  if (error) {
+    console.log("error", error);
+  }
+  return "Rezervare adaugata cu succes";
+};
