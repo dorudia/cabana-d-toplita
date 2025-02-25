@@ -52,7 +52,7 @@ const authConfig = {
 
 export const NEXTAUTH_URL = isDevelopment
   ? "http://localhost:3000"
-  : `https://cabana-d-toplita.vercel.app`;
+  : `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
 
 export const {
   auth,
