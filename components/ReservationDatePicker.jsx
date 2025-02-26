@@ -165,10 +165,10 @@ function ReservationDatePicker() {
   };
 
   return (
-    <div className="w-fit absolute left-1/2 -translate-x-1/2 top-[90%] flex flex-col items-center justify-end">
+    <div className="w-fit absolute left-1/2 -translate-x-1/2 top-[calc(100%-33px)] flex flex-col items-center justify-end">
       <Button
         onClick={() => setShowCalendar((prev) => !prev)}
-        className="text-xl flex gap-4 px-8 my-2 border font-sans"
+        className="text-xl flex gap-4 px-8 py-6 my-2 border font-sans"
       >
         {range?.from && range?.to
           ? `${format(range.from, "dd.MM.yyyy")} / ${format(
@@ -330,7 +330,7 @@ function ReservationDatePicker() {
           />
           <Button
             onClick={handleAddReservation}
-            className="w-fit flex mt-4 mb-0 mx-auto absolute left-1/2 -translate-x-1/2 text-xl"
+            className="w-fit flex mb-0 mx-auto absolute top-[calc(100%-26px)] left-1/2 -translate-x-1/2 text-xl"
           >
             Rezerva Acum
           </Button>
