@@ -15,9 +15,19 @@ import { Button } from "./ui/button";
 
 import { Label } from "../@/components/ui/label";
 import { Textarea } from "../@/components/ui/textarea";
+import { addObservatii } from "../app/lib/actions";
 
-const AllReservations = ({ rezervare }) => {
+const Rezervare = ({ rezervare, getAllReservations }) => {
   const textareaRef = useRef();
+  const closeBtnRef = useRef();
+
+  const handleAddObservatii = async () => {
+    const id = rezervare.id;
+    await addObservatii(id, textareaRef.current.value);
+    getAllReservations();
+    closeBtnRef.current.click();
+  };
+
   return (
     <div
       key={rezervare.id}
@@ -55,10 +65,12 @@ const AllReservations = ({ rezervare }) => {
             <DialogDescription></DialogDescription>
           </DialogHeader>
           <div className="grid gap-2">
-            <Label htmlFor="observatii">Observatii</Label>
+            <Label htmlFor="observatii" className="text-xl">
+              Observatii:
+            </Label>
             <Textarea
               ref={textareaRef}
-              className=""
+              className="text-xl text-red"
               id="observatii"
               name="observatii"
               placeholder="Observaii"
@@ -66,16 +78,11 @@ const AllReservations = ({ rezervare }) => {
               defaultValue={rezervare.observatii}
             />
           </div>
-          <Button
-            onClick={() =>
-              console.log("textareaRef:", textareaRef.current.value)
-            }
-          >
-            Adauga
-          </Button>
+          <Button onClick={handleAddObservatii}>Adauga</Button>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <Button
+                ref={closeBtnRef}
                 type="button"
                 variant="secondary"
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-secondary text-secondary-foreground hover:bg-secondary/75 hover:ring-1 hover:ring-primary/40 h-10 px-4 py-2 ml-auto"
@@ -90,4 +97,4 @@ const AllReservations = ({ rezervare }) => {
   );
 };
 
-export default AllReservations;
+export default Rezervare;

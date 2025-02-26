@@ -177,3 +177,12 @@ export const addNewReservationToDB = async (rezervare) => {
   }
   return "Rezervare adaugata cu succes";
 };
+
+export async function addObservatii(id, text) {
+  console.log("din-add-observatii:", id, text);
+  const { data, error } = await supabase
+    .from("rezervari")
+    .update({ observatii: text })
+    .eq("id", id) // Înlocuiește 11 cu ID-ul rezervării pe care vrei să o actualizezi
+    .select();
+}
