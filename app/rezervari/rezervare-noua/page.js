@@ -88,8 +88,15 @@ const RezervareNoua = async () => {
                 </select>
               </div>
             </div>
+
             <div className="grid gap-2">
-              <Textarea name="observatii" placeholder="Observaii" rows={4} />
+              <Label htmlFor="observatii">Observatii</Label>
+              <Textarea
+                id="observatii"
+                name="observatii"
+                placeholder="Observaii"
+                rows={4}
+              />
             </div>
 
             <Button type="submit" className="w-full">
