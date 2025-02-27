@@ -17,7 +17,7 @@ export default function Providers({ children }) {
 export function AuthEffects() {
   const { data: session } = useSession();
   useEffect(() => {
-    console.log("session", session?.user);
+    // console.log("session", session?.user);
     async function searchUser() {
       await searchUserInDBAndSendEmail(session);
     }

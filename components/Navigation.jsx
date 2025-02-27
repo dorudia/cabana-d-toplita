@@ -9,9 +9,7 @@ import supabase from "../lib/supabase";
 
 const Navigation = async () => {
   const session = await auth();
-  console.log(session?.user, session?.user?.image);
-
-  // await searchUserInDB();
+  // console.log(session?.user, session?.user?.image);
 
   return (
     <div className="p-2 py-6 dark:bg-slate-900/80 text-slate-900-foreground border-b bg-slate-200/70 border-slate-400/20 fixed tracking-wider top-0 w-full z-20">

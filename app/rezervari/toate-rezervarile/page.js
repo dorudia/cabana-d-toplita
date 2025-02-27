@@ -86,7 +86,7 @@ const Page = () => {
       )}
       {Object.keys(groupedReservations).map((monthYear) => (
         <div key={monthYear} className="mb-4">
-          <h2 className="text-lg text-start pl-4 capitalize py-2 mb-2">
+          <h2 className="text-lg text-start pl-4 text-red-600 capitalize py-2 mb-2">
             {monthYear}
           </h2>
           {groupedReservations[monthYear].map((rezervare) => (

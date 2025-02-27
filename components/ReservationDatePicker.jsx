@@ -52,6 +52,9 @@ function ReservationDatePicker() {
   });
   const [error, setError] = useState("");
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const resetRange = () => {
     setRange({ from: undefined, to: undefined });
   };
@@ -96,7 +99,7 @@ function ReservationDatePicker() {
   useEffect(() => {
     async function fetchReservations() {
       const data = await getReservations();
-      console.log("Rezervări din getAllReservation:", data);
+      // console.log("Rezervări din getAllReservation:", data);
       setAllReservations(data || []); // Asigură că nu e undefined
     }
 
@@ -106,7 +109,7 @@ function ReservationDatePicker() {
   useEffect(() => {
     async function fetchSettings() {
       const data = await getSettings();
-      console.log("Settings din getSettings:", data);
+      // console.log("Settings din getSettings:", data);
       setSettings(data || {});
       console.log("reload:", reload);
     }
@@ -178,7 +181,7 @@ function ReservationDatePicker() {
           : "VERIFICA DISPONIBILITATE"}
         <span>
           {numNights ? `-   ${numNights} Nopti,  ` : null}{" "}
-          {numNights ? `  Pret: ${numNights * 900} RON` : null}
+          {numNights ? `  Pret: ${numNights * pretNoapte} RON` : null}
         </span>
       </Button>
       {showCalendar && (
@@ -218,47 +221,24 @@ function ReservationDatePicker() {
                   </select>
                 </div>
               </div>
-
-              {/* <Button type="submit" className="w-full">
-                  Rezerva
-                </Button> */}
             </div>
-            {/* {error && (
-                      <p className="text-center p-2 text-sm bg-destructive text-destructive-foreground">
-                        {error}
-                      </p>
-                    )} */}
-            {/* <div className="text-center text-sm">
-                      {mode === "login" ? "Don't have an account? " : ""}
-                      <a
-                        href={
-                          mode === "login" ? "/login?mode=signup" : "/login?mode=login"
-                        }
-                        className="underline underline-offset-4"
-                      >
-                        {mode === "login" ? "Sign up" : "Back to login"}
-                      </a>
-                    </div> */}
           </div>
-          {/* </form> */}
+
           <DayPicker
             captionLayout="buttons"
             mode="range"
-            // onSelect={(range) => {
-            //   if (range && !isAlreadyBooked(range, bookedDates)) {
-            //     setRange(range);
-            //   } else {
-            //     console.log("Intervalul conține zile ocupate.");
-            //     setRange({ from: undefined, to: undefined }); // Resetăm selecția
-            //   }
-            // }}
             onSelect={(range) => {
+              if (range?.from && range.from < today) {
+                toast.error("Nu puteți selecta zile din trecut");
+                setRange({ from: undefined, to: undefined });
+                return;
+              }
               if (!range?.from || !range?.to) {
                 setRange(range); // Permite selecția inițială
                 return;
               }
 
-              console.log("range:::::::", range.from, range.to);
+              // console.log("range:::::::", range.from, range.to);
 
               const numNights = differenceInDays(range.to, range.from);
 
@@ -269,8 +249,8 @@ function ReservationDatePicker() {
                   `Trebuie să selectezi cel puțin ${minNights} nopți.`
                 );
                 toast.error(error, {
-                  title: "Eroare",
-                  description: `Trebuie să selectezi cel puțin ${minNights} nopți.`,
+                  title: `Minim ${minNights} nopți.`,
+                  description: `Se inchiriaza pentru cel puțin ${minNights} nopți.`,
                   variant: "destructive",
                 });
                 return;
@@ -305,7 +285,7 @@ function ReservationDatePicker() {
               },
               startDay: {
                 background:
-                  "linear-gradient(to bottom right, transparent 50%, #ff553b53 50%)",
+                  "linear-gradient(to bottom right, transparent 50%, #b22806 50%)",
                 // linear-gradient(
                 //   to bottom right,
                 //   transparent 50%,
@@ -318,7 +298,7 @@ function ReservationDatePicker() {
               },
               endDay: {
                 background:
-                  "linear-gradient(to bottom right, #ff553b53 50%, transparent 50%)", // Triunghi pe dreapta
+                  "linear-gradient(to bottom right, #b22806 50%, transparent 50%)", // Triunghi pe dreapta
                 color: "white",
                 borderRadius: "0", // Elimină rotunjirea
                 border: "none",
@@ -326,7 +306,8 @@ function ReservationDatePicker() {
               },
             }}
             disabledDays={disabledDays}
-            showOutsideDays
+            // disabled={[{ before: new Date() }]}
+            showOutsideDays={false}
           />
           <Button
             onClick={handleAddReservation}
