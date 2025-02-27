@@ -186,3 +186,8 @@ export async function addObservatii(id, text) {
     .eq("id", id) // Înlocuiește 11 cu ID-ul rezervării pe care vrei să o actualizezi
     .select();
 }
+
+export async function deleteReservation(id) {
+  const { error } = await supabase.from("rezervari").delete().eq("id", id);
+  if (error) throw new Error("Delete Reservation Error, Something went wrong!");
+}

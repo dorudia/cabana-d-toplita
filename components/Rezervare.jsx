@@ -1,6 +1,7 @@
 "use client";
 import { format } from "date-fns";
 import React, { useRef } from "react";
+import { Mail, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -15,23 +16,28 @@ import { Button } from "./ui/button";
 
 import { Label } from "../@/components/ui/label";
 import { Textarea } from "../@/components/ui/textarea";
-import { addObservatii } from "../app/lib/actions";
+import { addObservatii, deleteReservation } from "../app/lib/actions";
 
 const Rezervare = ({ rezervare, getAllReservations }) => {
   const textareaRef = useRef();
   const closeBtnRef = useRef();
 
-  const handleAddObservatii = async () => {
+  const handleAddObservations = async () => {
     const id = rezervare.id;
     await addObservatii(id, textareaRef.current.value);
     getAllReservations();
     closeBtnRef.current.click();
   };
 
+  const handleDeleteReservation = async () => {
+    await deleteReservation(rezervare.id);
+    getAllReservations();
+  };
+
   return (
     <div
       key={rezervare.id}
-      className="flex flex-wrap space-x-4 text-lg border border-primary/30 p-2 mx-4 mb-2 capitalize whitespace-nowrap "
+      className="flex flex-wrap items-center  space-x-4 text-lg border border-primary/30 p-2 mx-4 mb-2 capitalize whitespace-nowrap "
     >
       <p className="ml-4">
         creat: {format(new Date(rezervare.created_at), "dd-MM-yyyy/HH:mm:ss")}
@@ -78,7 +84,7 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
               defaultValue={rezervare.observatii}
             />
           </div>
-          <Button onClick={handleAddObservatii}>Adauga</Button>
+          <Button onClick={handleAddObservations}>Adauga</Button>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <Button
@@ -93,6 +99,14 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <Button
+        onClick={handleDeleteReservation}
+        size="sm"
+        variant="destructive"
+        className="!ml-auto"
+      >
+        <Trash2 />
+      </Button>
     </div>
   );
 };
