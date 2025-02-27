@@ -31,16 +31,11 @@
 //   matcher: ["/account/:path*", "/rezervari/:path*"],
 // };
 
-import { NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
-
-const allowedEmails = ["user1@example.com", "user2@example.com"].map((email) =>
-  email.toLowerCase()
-);
-
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  console.log("Token email:", token?.email);
+  console.log("Allowed emails:", allowedEmails);
 
   if (pathname.startsWith("/rezervari")) {
     if (!token || !allowedEmails.includes(token.email.toLowerCase())) {
@@ -55,10 +50,5 @@ export async function middleware(req) {
       return NextResponse.redirect(url);
     }
   }
-
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: ["/account/:path*", "/rezervari/:path*"],
-};
