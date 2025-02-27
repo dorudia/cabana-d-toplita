@@ -35,6 +35,9 @@ const authConfig = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, account, user }) {
+      console.log("JWT callback - token:", token);
+      console.log("JWT callback - account:", account);
+      console.log("JWT callback - user:", user);
       // Dacă e login inițial, account și user sunt disponibile.
       if (account) {
         token.provider = account.provider;
