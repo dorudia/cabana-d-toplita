@@ -34,6 +34,19 @@ const authConfig = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
+    async jwt({ token, account, user }) {
+      // Dacă e login inițial, account și user sunt disponibile.
+      if (account) {
+        token.provider = account.provider;
+        token.email = user?.email || token.email;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.user.email = token.email;
+      session.user.provider = token.provider;
+      return session;
+    },
     async redirect({ url, baseUrl }) {
       return baseUrl;
     },
