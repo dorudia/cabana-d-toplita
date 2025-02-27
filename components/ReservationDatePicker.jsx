@@ -285,7 +285,7 @@ function ReservationDatePicker() {
               },
               startDay: {
                 background:
-                  "linear-gradient(to bottom right, transparent 50%, #b22806 50%)",
+                  "linear-gradient(to bottom right, transparent 50%, #f6080875 50%)",
                 // linear-gradient(
                 //   to bottom right,
                 //   transparent 50%,
@@ -298,7 +298,7 @@ function ReservationDatePicker() {
               },
               endDay: {
                 background:
-                  "linear-gradient(to bottom right, #b22806 50%, transparent 50%)", // Triunghi pe dreapta
+                  "linear-gradient(to bottom right, #f6080875 50%, transparent 50%)", // Triunghi pe dreapta
                 color: "white",
                 borderRadius: "0", // Elimină rotunjirea
                 border: "none",
