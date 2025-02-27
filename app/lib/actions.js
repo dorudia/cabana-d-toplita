@@ -158,7 +158,10 @@ export const getUserReservations = async (email) => {
 
 export const getReservations = async () => {
   console.log("getAllReservations");
-  let { data: rezervari, error } = await supabase.from("rezervari").select("*");
+  let { data: rezervari, error } = await supabase
+    .from("rezervari")
+    .select("*")
+    .order("dataSosirii", { ascending: true }); // Sortează în funcție de data sosirii
 
   if (error) {
     console.log("error:", error);
@@ -185,9 +188,15 @@ export async function addObservatii(id, text) {
     .update({ observatii: text })
     .eq("id", id) // Înlocuiește 11 cu ID-ul rezervării pe care vrei să o actualizezi
     .select();
+
+  if (error) {
+    console.log("error", error);
+  }
+  return "Observatii adaugate cu succes";
 }
 
 export async function deleteReservation(id) {
   const { error } = await supabase.from("rezervari").delete().eq("id", id);
   if (error) throw new Error("Delete Reservation Error, Something went wrong!");
+  return "Rezervarea stearsa cu succes";
 }

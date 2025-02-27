@@ -17,6 +17,7 @@ import { Button } from "./ui/button";
 import { Label } from "../@/components/ui/label";
 import { Textarea } from "../@/components/ui/textarea";
 import { addObservatii, deleteReservation } from "../app/lib/actions";
+import { toast } from "sonner";
 
 const Rezervare = ({ rezervare, getAllReservations }) => {
   const textareaRef = useRef();
@@ -30,8 +31,18 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
   };
 
   const handleDeleteReservation = async () => {
-    await deleteReservation(rezervare.id);
-    getAllReservations();
+    if (
+      confirm(
+        `sigur vrei sa stergi rezervarea ${format(rezervare.dataSosirii, "dd-MM-yyyy")}/${format(rezervare.dataPlecrii, "dd-MM-yyyy")} ? ${rezervare.dataPlecrii} `
+      )
+    ) {
+      const response = await deleteReservation(rezervare.id);
+      toast.success(response, {
+        duration: 6000,
+        variant: "default",
+      });
+      getAllReservations();
+    }
   };
 
   return (
@@ -59,8 +70,7 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
             onClick={() => {
               console.log("rezervare.observatii:", rezervare.observatii);
             }}
-            className="whitespace-normal
-"
+            className="whitespace-normal cursor-pointer hover:underline"
           >
             observatii: {rezervare.observatii}
           </p>
