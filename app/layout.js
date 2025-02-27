@@ -65,7 +65,7 @@ export default function RootLayout({ children }) {
         >
           <Providers>
             <Navigation />
-            <main className="mx-auto dark:bg:slate-900 text-slate-foreground ">
+            <main className="mx-auto dark:bg:slate-900 text-slate-foreground font-geist">
               {children}
             </main>
             <Toaster />

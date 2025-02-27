@@ -59,17 +59,17 @@ function ReservationDatePicker() {
   const bookedDates = Array.isArray(allReservations)
     ? allReservations.map((reservation) => ({
         from: new Date(reservation.dataSosirii),
-        to: new Date(reservation.dataPlecrii),
+        to: new Date(reservation.dataPlecarii),
       }))
     : [];
 
   const startDays = allReservations.map((res) => new Date(res.dataSosirii));
-  const endDays = allReservations.map((res) => new Date(res.dataPlecrii));
+  const endDays = allReservations.map((res) => new Date(res.dataPlecarii));
 
   const modifiers = {
     occupied: allReservations.flatMap((res) => {
       const from = new Date(res.dataSosirii);
-      const to = new Date(res.dataPlecrii);
+      const to = new Date(res.dataPlecarii);
       return eachDayOfInterval({ start: from, end: to });
     }),
     startDay: startDays,
@@ -132,7 +132,7 @@ function ReservationDatePicker() {
     const userName = session?.user?.name;
     const userEmail = session?.user?.email;
     const dataSosirii = range.from;
-    const dataPlecrii = range.to;
+    const dataPlecarii = range.to;
     const innoptari = numNights;
     const numOaspeti = Number(adultii) + Number(copii);
     const pretTotal = numNights * pretNoapte;
@@ -141,7 +141,7 @@ function ReservationDatePicker() {
       userName,
       userEmail,
       dataSosirii: format(dataSosirii, "yyyy.MM.dd"),
-      dataPlecrii: format(dataPlecrii, "yyyy.MM.dd"),
+      dataPlecarii: format(dataPlecarii, "yyyy.MM.dd"),
       innoptari,
       numOaspeti,
       pretTotal,

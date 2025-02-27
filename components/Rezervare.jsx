@@ -33,7 +33,7 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
   const handleDeleteReservation = async () => {
     if (
       confirm(
-        `sigur vrei sa stergi rezervarea ${format(rezervare.dataSosirii, "dd-MM-yyyy")}/${format(rezervare.dataPlecrii, "dd-MM-yyyy")} ? ${rezervare.dataPlecrii} `
+        `sigur vrei sa stergi rezervarea ${format(rezervare.dataSosirii, "dd-MM-yyyy")}/${format(rezervare.dataPlecarii, "dd-MM-yyyy")} ? ${rezervare.dataPlecarii} `
       )
     ) {
       const response = await deleteReservation(rezervare.id);
@@ -48,15 +48,22 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
   return (
     <div
       key={rezervare.id}
-      className="flex flex-wrap items-center  space-x-4 text-lg border border-primary/30 p-2 mx-4 mb-2 capitalize whitespace-nowrap "
+      className="flex flex-wrap items-center font-geist space-x-4 text-lg border border-primary/30 p-2 mx-4 mb-2 capitalize whitespace-nowrap "
     >
       <p className="ml-4">
-        creat: {format(new Date(rezervare.created_at), "dd-MM-yyyy/HH:mm:ss")}
+        creat: {format(new Date(rezervare.created_at), "dd-MM-yyyy")}
       </p>
-      <p>sosire: {format(new Date(rezervare.dataSosirii), "dd-MM-yyyy")}</p>
       <p>
-        plecare:
-        {format(new Date(rezervare.dataPlecrii), "dd-MM-yyyy")}
+        sosire:{" "}
+        <span className="font-semibold text-lg font-geist">
+          {format(new Date(rezervare.dataSosirii), "dd-MM-yyyy")}
+        </span>
+      </p>
+      <p>
+        plecare:{" "}
+        <span className="font-semibold text-lg font-geist">
+          {format(new Date(rezervare.dataPlecarii), "dd-MM-yyyy")}
+        </span>
       </p>
       <p>oaspeti: {rezervare.numOaspeti}</p>
       <p>innoptari: {rezervare.innoptari}</p>

@@ -15,7 +15,7 @@ const Navigation = async () => {
 
   return (
     <div className="p-2 py-6 dark:bg-slate-900/80 text-slate-900-foreground border-b bg-slate-200/70 border-slate-400/20 fixed tracking-wider top-0 w-full z-20">
-      <nav className="flex items-center justify-between max-w-7xl mx-auto font-serif text-xl ">
+      <nav className="flex items-center justify-between max-w-7xl mx-auto font-geist text-xl ">
         <Link href="/">Home logo</Link>
         <ul className="flex space-x-4">
           <li className="">
@@ -27,11 +27,11 @@ const Navigation = async () => {
           <li>
             <Link href="/contact">Contact</Link>
           </li>
-          {/* {session?.user?.email === "dorudia@gmail.com" && ( */}
-          <li>
-            <Link href="/rezervari/toate-rezervarile">Rezervari</Link>
-          </li>
-          {/* )} */}
+          {session?.user?.email === "dorudia@gmail.com" && (
+            <li>
+              <Link href="/rezervari/toate-rezervarile">Rezervari</Link>
+            </li>
+          )}
 
           {session?.user && (
             <li>

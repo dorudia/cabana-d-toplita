@@ -31,7 +31,7 @@ export default function Home() {
             Cabana
             <i className="text-5xl md:text-8xl"> D</i> Toplita
           </h1>
-          <p className="text-xl md:text-3xl tracking-wide text-slate-300 font-serif [text-shadow:2px_2px_black] text-balance italic">
+          <p className="text-xl md:text-3xl tracking-wide text-slate-300 font-geist [text-shadow:2px_2px_black] text-balance italic">
             Lasă în urmă agitația orașului și bucură-te de liniștea munților,
             intr-o cabana din lemn, pe malul râului Toplița.
           </p>
