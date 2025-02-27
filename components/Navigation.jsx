@@ -25,11 +25,12 @@ const Navigation = async () => {
           <li>
             <Link href="/contact">Contact</Link>
           </li>
-          {session?.user?.email === "dorudia@gmail.com" && (
-            <li>
-              <Link href="/rezervari/toate-rezervarile">Rezervari</Link>
-            </li>
-          )}
+          {session?.user?.email === "dorudia@gmail.com" ||
+            (session?.user?.email === "elamoldovan12@gmail.com" && (
+              <li>
+                <Link href="/rezervari/toate-rezervarile">Rezervari</Link>
+              </li>
+            ))}
 
           {session?.user && (
             <li>

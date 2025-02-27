@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const allowedEmails = ["dorudia@gmail.com", "elamoldovan12@yahoo.com"]; // înlocuiește cu email-urile permise
+const allowedEmails = ["dorudia@gmail.com", "elamoldovan12@gmail.com"]; // înlocuiește cu email-urile permise
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
