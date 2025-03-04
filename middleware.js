@@ -25,13 +25,13 @@ export async function middleware(req) {
   //   }
   // }
   // Pentru rutele din /account: doar verificăm autentificarea
-  if (pathname.startsWith("/account")) {
-    if (!token) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/login";
-      return NextResponse.redirect(url);
-    }
-  }
+  // if (pathname.startsWith("/account")) {
+  //   if (!token) {
+  //     const url = req.nextUrl.clone();
+  //     url.pathname = "/login";
+  //     return NextResponse.redirect(url);
+  //   }
+  // }
   return NextResponse.next();
 }
 
