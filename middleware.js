@@ -1,23 +1,17 @@
-// import { auth } from "./app/lib/auth";
-
-// export const middleware = auth;
-
-// export const config = {
-//   matcher: "/account",
-// };
-
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 const allowedEmails = [
-  process.env.NEXTAUTH_EMAIL_1,
-  process.env.NEXTAUTH_EMAIL_2,
+  process.env.NEXT_PUBLIC_ADMIN_EMAIL_1,
+  process.env.NEXT_PUBLIC_ADMIN_EMAIL_2,
 ]; // înlocuiește cu email-urile permise
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
+  console.log("req:", req.nextUrl);
+
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  console.log("token", token);
+  console.log("token:", token);
 
   // Pentru rutele din /rezervari
   if (pathname.startsWith("/rezervari")) {
@@ -38,7 +32,3 @@ export async function middleware(req) {
   }
   return NextResponse.next();
 }
-
-// export const config = {
-//   matcher: ["/account/:path*"],
-// };
