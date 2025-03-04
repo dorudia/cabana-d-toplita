@@ -8,10 +8,10 @@ const allowedEmails = [
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
-  console.log("req:", req.nextUrl);
+  console.log("from middleware - req:", req.nextUrl);
 
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  console.log("token:", token);
+  console.log("from middleware - token:", token);
 
   // Pentru rutele din /rezervari
   if (pathname.startsWith("/rezervari")) {
