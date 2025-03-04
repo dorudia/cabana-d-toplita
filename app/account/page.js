@@ -6,6 +6,14 @@ import SignOutButton from "../../components/SignOutButton";
 async function UserAccountPage() {
   const session = await auth();
 
+  if (!session?.user) {
+    return (
+      <section className="text-center py-10 text-xl mt-[100px]">
+        You are not logged in. Please log in to access your account.
+      </section>
+    );
+  }
+
   return (
     <section className="mt-28 max-w-7xl mx-auto p-6 border border-primary/20 shadow-xl shadow-primary/10">
       <h1 className=" text-3xl font-bold underline mb-4">Your Account</h1>
