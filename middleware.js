@@ -10,14 +10,12 @@ export async function middleware(req) {
   const { pathname } = req.nextUrl;
   console.log("Middleware triggered for:", pathname);
 
-  if (pathname.startsWith("/_next") || pathname.startsWith("/api")) {
-    return NextResponse.next();
-  }
-
-  console.log("Middleware triggered for:", pathname);
-
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   console.log("Token from middleware:", token);
+
+  if (!token) {
+    console.log("No token found, checking cookies:", req.cookies);
+  }
 
   if (pathname.startsWith("/rezervari")) {
     if (!token || !allowedEmails.includes(token.email)) {

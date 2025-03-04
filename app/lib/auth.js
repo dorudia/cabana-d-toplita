@@ -110,15 +110,13 @@ const authConfig = {
   secret: process.env.NEXTAUTH_SECRET, // Secretul pentru semnarea token-urilor
   callbacks: {
     async jwt({ token, user, account }) {
-      // Adaugă informații suplimentare în token
       if (account) {
-        token.provider = account.provider; // Adaugă providerul (google, facebook etc.)
-        token.email = user?.email || token.email; // Adaugă email-ul utilizatorului
+        token.provider = account.provider;
+        token.email = user?.email || token.email;
       }
       return token;
     },
     async session({ session, token }) {
-      // Adaugă informații suplimentare în sesiune
       session.user.email = token.email;
       session.user.provider = token.provider;
       return session;
