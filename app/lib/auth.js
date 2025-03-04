@@ -130,11 +130,11 @@ const authConfig = {
   },
   cookies: {
     sessionToken: {
-      name: `__Secure-next-auth.session-token`, // Numele cookie-ului
+      name: `__Secure-next-auth.session-token`,
       options: {
-        httpOnly: true, // Cookie-ul este accesibil doar pe server
-        sameSite: "lax", // Protecție CSRF
-        path: "/", // Cookie-ul este valabil pentru întreg site-ul
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
         secure: process.env.NODE_ENV === "production", // Folosește HTTPS în producție
       },
     },
