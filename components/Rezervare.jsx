@@ -55,13 +55,13 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
       </p>
       <p>
         sosire:{" "}
-        <span className="font-semibold text-lg font-geist">
+        <span className="font-semibold text-lg border border-primary/30 p-1 rounded-md">
           {format(new Date(rezervare.dataSosirii), "dd-MM-yyyy")}
         </span>
       </p>
       <p>
         plecare:{" "}
-        <span className="font-semibold text-lg font-geist">
+        <span className="font-semibold text-lg border border-primary/30 p-1 rounded-md">
           {format(new Date(rezervare.dataPlecarii), "dd-MM-yyyy")}
         </span>
       </p>

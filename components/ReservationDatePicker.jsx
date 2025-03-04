@@ -43,7 +43,7 @@ function ReservationDatePicker() {
   const [settings, setSettings] = useState({});
   const { minNights, pretNoapte } = settings;
   const [reload, setReload] = useState(false);
-  const adultiiRef = useRef();
+  const adultiRef = useRef();
   const copiiRef = useRef();
   const [range, setRange] = useState((from, to) => {
     // console.log("range-from:", from, "range-to:", to);
@@ -68,6 +68,9 @@ function ReservationDatePicker() {
 
   const startDays = allReservations.map((res) => new Date(res.dataSosirii));
   const endDays = allReservations.map((res) => new Date(res.dataPlecarii));
+  const startDayEndDay = startDays.map((startDay) =>
+    endDays.find((endDay) => isSameDay(startDay, endDay))
+  );
 
   const modifiers = {
     occupied: allReservations.flatMap((res) => {
@@ -77,6 +80,7 @@ function ReservationDatePicker() {
     }),
     startDay: startDays,
     endDay: endDays,
+    startDayEndDay: startDayEndDay,
   };
 
   const displayRange = isAlreadyBooked(range, bookedDates) ? {} : range; //inlocuieste cu zilele rezervate
@@ -130,12 +134,19 @@ function ReservationDatePicker() {
       });
       return;
     }
-    const adultii = adultiiRef.current.value;
+    if (!range?.from || !range?.to) {
+      toast.error("Va rugam selectati o data de sosire si o data de plecare.", {
+        duration: 5000,
+        variant: "destructive",
+      });
+      return;
+    }
+    const adultii = adultiRef.current.value;
     const copii = copiiRef.current.value;
     const userName = session?.user?.name;
     const userEmail = session?.user?.email;
-    const dataSosirii = range.from;
-    const dataPlecarii = range.to;
+    const dataSosirii = range?.from;
+    const dataPlecarii = range?.to;
     const innoptari = numNights;
     const numOaspeti = Number(adultii) + Number(copii);
     const pretTotal = numNights * pretNoapte;
@@ -171,7 +182,7 @@ function ReservationDatePicker() {
     <div className="w-fit absolute left-1/2 -translate-x-1/2 top-[calc(100%-33px)] flex flex-col items-center justify-end">
       <Button
         onClick={() => setShowCalendar((prev) => !prev)}
-        className="text-xl flex gap-4 px-8 py-6 my-2 border font-sans"
+        className="text-xl flex flex-wrap items-center justify-center h-auto gap-2 px-2 py-2 md:px-4 md:py-4 my-2 border font-sans"
       >
         {range?.from && range?.to
           ? `${format(range.from, "dd.MM.yyyy")} / ${format(
@@ -179,13 +190,13 @@ function ReservationDatePicker() {
               "dd.MM.yyyy"
             )}`
           : "VERIFICA DISPONIBILITATE"}
-        <span>
-          {numNights ? `-   ${numNights} Nopti,  ` : null}{" "}
+        <span className={!numNights ? "hidden" : ""}>
+          {numNights ? `-   ${numNights} Nopti,  ` : null}
           {numNights ? `  Pret: ${numNights * pretNoapte} RON` : null}
         </span>
       </Button>
       {showCalendar && (
-        <div className="w-fit  p-4  sm:p-12 bg-secondary/90 items-center z-10 rounded-[12px] outline outline-1 outline-offset-[-8px] outline-primary ">
+        <div className="w-fit  p-8  sm:p-12 bg-secondary/90 items-center0 rounded-[12px] outline outline-1 outline-offset-[-8px] outline-primary relative">
           {/* <form action={addNewReservationToDB} className=""> */}
           <div className="grid gap-6 md:max-w-[500px] mx-auto">
             <div className="grid gap-6 mb-4">
@@ -193,7 +204,7 @@ function ReservationDatePicker() {
                 <div className="grid gap-2">
                   <Label htmlFor="adulti">Adulti</Label>
                   <select
-                    ref={adultiiRef}
+                    ref={adultiRef}
                     name="adulti"
                     id="adulti"
                     className="p-2 border-[1px] border-prymary focus:ring-1 focus:ring-primary/30 rounded-md"
@@ -235,6 +246,11 @@ function ReservationDatePicker() {
               }
               if (!range?.from || !range?.to) {
                 setRange(range); // Permite selecția inițială
+                return;
+              }
+              console.log("range:", range);
+              if (range.to === range.from) {
+                setRange({ from: undefined, to: undefined });
                 return;
               }
 
@@ -304,9 +320,16 @@ function ReservationDatePicker() {
                 border: "none",
                 pointerEvents: "auto",
               },
+              startDayEndDay: {
+                background:
+                  "linear-gradient(to bottom right, #f6080875 40%, transparent 50%, transparent 50%, #f6080875 40%)", // Triunghi pe dreapta
+                color: "white",
+                borderRadius: "0", // Elimină rotunjirea
+                border: "none",
+                pointerEvents: "auto",
+              },
             }}
             disabledDays={disabledDays}
-            // disabled={[{ before: new Date() }]}
             showOutsideDays={false}
           />
           <Button

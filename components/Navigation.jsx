@@ -1,42 +1,47 @@
-import { auth } from "../app/lib/auth";
-import Link from "next/link";
-import SignOutButton from "./SignOutButton";
-import { ModeToggle } from "./ModeToggle";
+"use client";
 import Image from "next/image";
+import Link from "next/link";
+import { ModeToggle } from "./ModeToggle";
+import SignOutButton from "./SignOutButton";
 
-import { addNewUserToDB, findUserInDB, sendEmail } from "../app/lib/actions";
-import supabase from "../lib/supabase";
+import HamburgerMenu from "./HamburgerMenu";
+import { useState } from "react";
 
-const Navigation = async () => {
-  const session = await auth();
-  // console.log(session?.user, session?.user?.image);
+const Navigation = ({ session }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  let navUlClasses = isOpen
+    ? "flex flex-col absolute top-[77px] left-0 w-[100%] pt-16 bg-secondary h-screen items-center justify-top space-y-4 mx-auto font-geist text-xl "
+    : "hidden md:flex items-center justify-between  space-x-4 mx-auto font-geist text-xl ";
+  console.log("navUlClasses", navUlClasses);
 
   return (
-    <div className="p-2 py-6 dark:bg-slate-900/80 text-slate-900-foreground border-b bg-slate-200/70 border-slate-400/20 fixed tracking-wider top-0 w-full z-20">
+    <div className="p-2 py-6 dark:bg-slate-900/80 text-slate-900-foreground border-b bg-slate-200/70 backdrop-blur-sm border-slate-400/20 fixed tracking-wider top-0 w-full z-20">
       <nav className="flex items-center justify-between max-w-7xl mx-auto font-geist text-xl ">
         <Link href="/">Home logo</Link>
-        <ul className="flex space-x-4">
-          <li className="">
+        <ul className={navUlClasses}>
+          <li onClick={() => setIsOpen(false)}>
             <Link href="/gallery">Gallery</Link>
           </li>
-          <li>
+          <li onClick={() => setIsOpen(false)}>
             <Link href="/about">About</Link>
           </li>
-          <li>
+          <li onClick={() => setIsOpen(false)}>
             <Link href="/contact">Contact</Link>
           </li>
-          {(session?.user?.email === "dorudia@gmail.com" ||
-            session?.user?.email === "elamoldovan12@gmail.com") && (
-            <li>
-              <Link href="/rezervari/toate-rezervarile">Rezervari</Link>
-            </li>
-          )}
-
           {session?.user && (
-            <li>
+            <li onClick={() => setIsOpen(false)}>
               <Link href="/account">Account</Link>
             </li>
           )}
+          {(session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL_1 ||
+            session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL_2) && (
+            <li onClick={() => setIsOpen(false)}>
+              <Link href="/rezervari/toate-rezervarile">Rezervari</Link>
+            </li>
+          )}
+        </ul>
+        <div className="flex items-center space-x-4">
           {session?.user ? (
             <>
               {session?.user?.image ? (
@@ -61,7 +66,8 @@ const Navigation = async () => {
             <Link href="/login?mode=login">Login</Link>
           )}
           <ModeToggle />
-        </ul>
+          <HamburgerMenu isOpen={isOpen} setIsOpen={setIsOpen} />
+        </div>
       </nav>
     </div>
   );
