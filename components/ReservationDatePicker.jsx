@@ -1,18 +1,17 @@
 "use client";
 import {
-  add,
   differenceInDays,
   eachDayOfInterval,
   format,
   isSameDay,
   isWithinInterval,
-  set,
 } from "date-fns";
 import { ro } from "date-fns/locale/ro";
 import { useSession } from "next-auth/react";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { toast } from "sonner";
 import {
   addNewReservationToDB,
   getReservations,
@@ -20,8 +19,6 @@ import {
 } from "../app/lib/actions";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { toast } from "sonner";
 
 function isAlreadyBooked(range, datesArr) {
   if (!range?.from || !range?.to) return false;
@@ -51,6 +48,8 @@ function ReservationDatePicker() {
     return { from: undefined, to: undefined };
   });
   const [error, setError] = useState("");
+
+  console.log("session from reservation:", session);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
