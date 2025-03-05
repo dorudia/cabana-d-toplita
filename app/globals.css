@@ -486,3 +486,8 @@
   border-radius: 8px;
   padding: 16px;
 }
+
+.grid-masonry {
+  grid-auto-rows: auto; /* Permite rândurilor să aibă înălțimi diferite */
+  grid-auto-flow: dense; /* Împachetează elementele în mod dens */
+}
