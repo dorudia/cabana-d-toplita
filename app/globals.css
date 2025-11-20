@@ -316,8 +316,10 @@
 
 .rdp-months {
   position: relative;
-  display: grid;
+  display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   gap: var(--rdp-months-gap);
   max-width: fit-content;
   width: max-content;

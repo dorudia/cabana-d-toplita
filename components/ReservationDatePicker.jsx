@@ -273,7 +273,7 @@ function ReservationDatePicker() {
         </span>
       </Button>
       {showCalendar && (
-        <div className="w-fit  p-8  sm:p-12 bg-secondary/90 items-center0 rounded-[12px] outline outline-1 outline-offset-[-8px] outline-primary relative">
+        <div className="w-fit md:w-[580px] p-8  sm:p-12 bg-secondary/90 items-center0 rounded-[12px] outline outline-1 outline-offset-[-8px] outline-primary relative">
           {/* <form action={addNewReservationToDB} className=""> */}
           <div className="grid gap-6 md:max-w-[500px] mx-auto">
             <div className="grid gap-6 mb-4">
@@ -378,7 +378,7 @@ function ReservationDatePicker() {
               },
               startDay: {
                 background:
-                  "linear-gradient(to bottom right, transparent 50%, #f6080875 50%)",
+                  "linear-gradient(to bottom right, transparent 50%, #ff2200cb 50%)",
                 // linear-gradient(
                 //   to bottom right,
                 //   transparent 50%,
@@ -391,7 +391,7 @@ function ReservationDatePicker() {
               },
               endDay: {
                 background:
-                  "linear-gradient(to bottom right, #f6080875 50%, transparent 50%)", // Triunghi pe dreapta
+                  "linear-gradient(to bottom right, #ff2200cb 50%, transparent 50%)", // Triunghi pe dreapta
                 color: "white",
                 borderRadius: "0", // Elimină rotunjirea
                 border: "none",
@@ -399,7 +399,7 @@ function ReservationDatePicker() {
               },
               startDayEndDay: {
                 background:
-                  "linear-gradient(to bottom right, #f6080875 40%, transparent 50%, transparent 50%, #f6080875 40%)", // Triunghi pe dreapta
+                  "linear-gradient(to bottom right, #ff2200cb 40%, transparent 50%, transparent 50%, #ff2200cb 40%)", // Triunghi pe dreapta
                 color: "white",
                 borderRadius: "0", // Elimină rotunjirea
                 border: "none",
