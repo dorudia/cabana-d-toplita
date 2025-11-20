@@ -17,6 +17,8 @@ export default function Home() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false); // Evită problemele de hidratare
 
+  console.log("TEST?:", name);
+
   const user = useEffect(() => {
     setMounted(true);
   }, []);

@@ -16,7 +16,7 @@ import {
   addNewReservationToDB,
   getReservations,
   getSettings,
-} from "../app/lib/actions";
+} from "../lib/actions";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 
@@ -99,81 +99,161 @@ function ReservationDatePicker() {
 
   useEffect(() => {
     async function fetchReservations() {
-      const data = await getReservations();
-      // console.log("Rezervări din getAllReservation:", data);
-      setAllReservations(data || []); // Asigură că nu e undefined
+      const res = await fetch("/api/reservations");
+      const data = await res.json();
+
+      const rezervari = (data.rezervari || []).map((res) => ({
+        ...res,
+        dataSosirii: new Date(res.dataSosirii),
+        dataPlecarii: new Date(res.dataPlecarii),
+      }));
+
+      setAllReservations(rezervari); // Acum datele sunt instanțe Date
     }
 
     fetchReservations();
   }, [reload]);
 
   useEffect(() => {
+    // async function fetchSettings() {
+    //   const data = await getSettings();
+    //   console.log("Settings din getSettings:", data);
+    //   setSettings(data || {});
+
+    //   console.log("reload:", reload);
+    // }
     async function fetchSettings() {
-      const data = await getSettings();
-      // console.log("Settings din getSettings:", data);
-      setSettings(data || {});
-      console.log("reload:", reload);
+      const res = await fetch("/api/settings");
+      const data = await res.json();
+      setSettings(data.settings);
     }
+
     fetchSettings();
   }, []);
 
+  useEffect(() => {
+    console.log("🎯 Settings s-au actualizat:", settings);
+  }, [settings]);
+
+  // const handleAddReservation = async () => {
+
   const handleAddReservation = async () => {
-    if (!session?.user || !session?.user?.email) {
-      toast.error("Nu sunteti logat, va rugam sa va logati.", {
+    if (!session?.user?.email) {
+      toast.error("Trebuie să fii logat pentru a face o rezervare.", {
         duration: 9000,
         variant: "destructive",
         action: {
           label: "Mergi la login",
-          onClick: () => {
-            window.location.href = "/login";
-          },
+          onClick: () => (window.location.href = "/login"),
         },
       });
       return;
     }
+
     if (!range?.from || !range?.to) {
-      toast.error("Va rugam selectati o data de sosire si o data de plecare.", {
+      toast.error("Selectează data de sosire și de plecare.", {
         duration: 5000,
         variant: "destructive",
       });
       return;
     }
-    const adultii = adultiRef.current.value;
-    const copii = copiiRef.current.value;
-    const userName = session?.user?.name;
-    const userEmail = session?.user?.email;
-    const dataSosirii = range?.from;
-    const dataPlecarii = range?.to;
-    const innoptari = numNights;
-    const numOaspeti = Number(adultii) + Number(copii);
-    const pretTotal = numNights * pretNoapte;
 
-    const response = await addNewReservationToDB({
-      userName,
-      userEmail,
-      dataSosirii: format(dataSosirii, "yyyy.MM.dd"),
-      dataPlecarii: format(dataPlecarii, "yyyy.MM.dd"),
-      innoptari,
-      numOaspeti,
-      pretTotal,
-    });
+    const adultii = Number(adultiRef.current.value);
+    const copii = Number(copiiRef.current.value);
+    const numOaspeti = adultii + copii;
+    const innoptari = differenceInDays(range.to, range.from);
+    const pretTotal = innoptari * pretNoapte;
 
-    if (response.error) {
-      setError(response.error);
-      toast.error(response.error, {
+    try {
+      const response = await fetch("/api/reservations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userName: session.user.name,
+          userEmail: session.user.email,
+          dataSosirii: format(range.from, "yyyy.MM.dd"),
+          dataPlecarii: format(range.to, "yyyy.MM.dd"),
+          innoptari,
+          numOaspeti,
+          pretTotal,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.error) {
+        toast.error(result.error, { duration: 5000, variant: "destructive" });
+      } else {
+        toast.success(result.message, { duration: 5000 });
+        setReload((prev) => !prev); // actualizează rezervările
+        setShowCalendar(false);
+        setRange({ from: undefined, to: undefined });
+      }
+    } catch (err) {
+      toast.error("Eroare la crearea rezervării.", {
         duration: 5000,
         variant: "destructive",
       });
-    } else {
-      toast.success(response, {
-        duration: 5000,
-        variant: "default",
-      });
+      console.error(err);
     }
-    setReload((prev) => !prev);
-    setShowCalendar(false);
-    resetRange();
   };
+
+  //   if (!session?.user || !session?.user?.email) {
+  //     toast.error("Nu sunteti logat, va rugam sa va logati.", {
+  //       duration: 9000,
+  //       variant: "destructive",
+  //       action: {
+  //         label: "Mergi la login",
+  //         onClick: () => {
+  //           window.location.href = "/login";
+  //         },
+  //       },
+  //     });
+  //     return;
+  //   }
+  //   if (!range?.from || !range?.to) {
+  //     toast.error("Va rugam selectati o data de sosire si o data de plecare.", {
+  //       duration: 5000,
+  //       variant: "destructive",
+  //     });
+  //     return;
+  //   }
+  //   const adultii = adultiRef.current.value;
+  //   const copii = copiiRef.current.value;
+  //   const userName = session?.user?.name;
+  //   const userEmail = session?.user?.email;
+  //   const dataSosirii = range?.from;
+  //   const dataPlecarii = range?.to;
+  //   const innoptari = numNights;
+  //   const numOaspeti = Number(adultii) + Number(copii);
+  //   const pretTotal = numNights * pretNoapte;
+
+  //   const response = await addNewReservationToDB({
+  //     userName,
+  //     userEmail,
+  //     dataSosirii: format(dataSosirii, "yyyy.MM.dd"),
+  //     dataPlecarii: format(dataPlecarii, "yyyy.MM.dd"),
+  //     innoptari,
+  //     numOaspeti,
+  //     pretTotal,
+  //   });
+
+  //   if (response.error) {
+  //     setError(response.error);
+  //     toast.error(response.error, {
+  //       duration: 5000,
+  //       variant: "destructive",
+  //     });
+  //   } else {
+  //     toast.success(response, {
+  //       duration: 5000,
+  //       variant: "default",
+  //     });
+  //   }
+  //   setReload((prev) => !prev);
+  //   setShowCalendar(false);
+  //   resetRange();
+  // };
 
   return (
     <div className="w-fit absolute left-1/2 -translate-x-1/2 top-[calc(100%-33px)] flex flex-col items-center justify-end">

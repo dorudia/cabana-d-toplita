@@ -18,8 +18,14 @@ const Page = () => {
   }, []);
 
   async function getAllReservations() {
-    const allReservations = await getReservations();
-    setReservations(allReservations || []);
+    const res = await fetch("/api/reservations");
+    const data = await res.json();
+    const rezervari = (data.rezervari || []).map((res) => ({
+      ...res,
+      dataSosirii: new Date(res.dataSosirii),
+      dataPlecarii: new Date(res.dataPlecarii),
+    }));
+    setReservations(rezervari);
   }
 
   // Filtrare rezervări pentru taburi
@@ -119,7 +125,7 @@ const Page = () => {
               {groupedReservations[monthYear].map((rezervare) => (
                 <Rezervare
                   rezervare={rezervare}
-                  key={rezervare.id}
+                  key={rezervare._id}
                   getAllReservations={getAllReservations}
                 />
               ))}
@@ -132,3 +138,137 @@ const Page = () => {
 };
 
 export default Page;
+
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import { useSession } from "next-auth/react";
+// import { getReservations } from "../../lib/actions";
+// import Rezervare from "../../../components/Rezervare";
+// import { Button } from "../../../components/ui/button";
+// import { isAfter, isBefore, format } from "date-fns";
+// import { ro } from "date-fns/locale/ro";
+
+// const Page = () => {
+//   const { data: session, status } = useSession();
+//   const [activeTab, setActiveTab] = useState("all");
+//   const [reservations, setReservations] = useState([]);
+
+//   useEffect(() => {
+//     getAllReservations();
+//   }, []);
+
+//   async function getAllReservations() {
+//     const res = await fetch("/api/reservations");
+//     const data = await res.json();
+//     const rezervari = (data.rezervari || []).map((res) => ({
+//       ...res,
+//       dataSosirii: new Date(res.dataSosirii),
+//       dataPlecarii: new Date(res.dataPlecarii),
+//     }));
+//     setReservations(rezervari);
+//   }
+
+//   // Filtrare rezervări
+//   const upcomingReservations = reservations.filter((r) =>
+//     isAfter(r.dataSosirii, new Date())
+//   );
+//   const pastReservations = reservations.filter((r) =>
+//     isBefore(r.dataPlecarii, new Date())
+//   );
+
+//   const incasari = pastReservations.reduce(
+//     (total, r) => total + r.pretTotal,
+//     0
+//   );
+
+//   // Grupare după lună
+//   function groupByMonth(reservationsArray) {
+//     return reservationsArray.reduce((groups, reservation) => {
+//       const monthYear = format(reservation.dataSosirii, "LLLL yyyy", {
+//         locale: ro,
+//       });
+//       if (!groups[monthYear]) groups[monthYear] = [];
+//       groups[monthYear].push(reservation);
+//       return groups;
+//     }, {});
+//   }
+
+//   let reservationsToDisplay =
+//     activeTab === "all"
+//       ? reservations
+//       : activeTab === "past"
+//         ? pastReservations
+//         : upcomingReservations;
+
+//   const groupedReservations = groupByMonth(reservationsToDisplay);
+
+//   const allowedEmail = [
+//     "dorudia@gmail.com",
+//     "elamoldovan12@gmail.com",
+//   ].includes(session?.user?.email?.toLowerCase());
+
+//   if (status === "loading")
+//     return (
+//       <div className="text-center py-10 text-xl mt-[100px]">Loading...</div>
+//     );
+
+//   return (
+//     <section className="mt-20 mx-auto text-3xl text-center py-4 max-w-7xl">
+//       {!allowedEmail ? (
+//         <h1 className="text-2xl font-bold mt-[100px]">
+//           Nu ai dreptul de a accesa această pagină
+//         </h1>
+//       ) : (
+//         <>
+//           <h1 className="text-3xl font-bold py-4">Toate Rezervările:</h1>
+//           <div className="flex flex-wrap gap-2 border-b mb-4 p-4 items-center">
+//             <Button
+//               onClick={() => setActiveTab("all")}
+//               size="sm"
+//               variant="outline"
+//             >
+//               Toate Rezervările
+//             </Button>
+//             <Button
+//               onClick={() => setActiveTab("past")}
+//               size="sm"
+//               variant="outline"
+//             >
+//               Rezervările Anterioare
+//             </Button>
+//             <Button
+//               onClick={() => setActiveTab("upcoming")}
+//               size="sm"
+//               variant="outline"
+//             >
+//               Rezervările Viitoare
+//             </Button>
+//             <span className="text-lg p-2">Încasări: {incasari} lei</span>
+//           </div>
+
+//           {Object.keys(groupedReservations).length === 0 && (
+//             <p className="text-xl">Nu există rezervări.</p>
+//           )}
+
+//           {Object.keys(groupedReservations).map((monthYear) => (
+//             <div key={monthYear} className="mb-4">
+//               <h2 className="text-lg text-start pl-4 text-red-600 capitalize py-2 mb-2">
+//                 {monthYear}
+//               </h2>
+//               {groupedReservations[monthYear].map((rezervare) => (
+//                 <Rezervare
+//                   key={rezervare._id} // ✅ corect
+//                   rezervare={rezervare}
+//                   getAllReservations={getAllReservations}
+//                 />
+//               ))}
+//             </div>
+//           ))}
+//         </>
+//       )}
+//     </section>
+//   );
+// };
+
+// export default Page;

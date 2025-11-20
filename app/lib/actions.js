@@ -218,21 +218,3 @@ export async function getGalleryImages() {
   console.log("Image URLs:", imageUrls);
   return imageUrls;
 }
-
-// export async function getGalleryImages() {
-//   const { data, error } = await supabase.storage.from("gallery").list();
-
-//   if (error) {
-//     console.error("Error fetching files:", error);
-//     return;
-//   }
-
-//   const imageUrls = data.map((file) => {
-//     // Folosește encodeURIComponent pentru a codifica numele fișierului
-//     const encodedFileName = encodeURIComponent(file.name);
-//     return supabase.storage.from("gallery").getPublicUrl(encodedFileName);
-//   });
-
-//   console.log("Image URLs:", imageUrls);
-//   return imageUrls;
-// }

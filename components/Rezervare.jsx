@@ -51,7 +51,7 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
       className="flex flex-wrap items-center font-geist space-x-4 text-lg border border-primary/30 p-2 mx-4 mb-2 capitalize whitespace-nowrap "
     >
       <p className="ml-4">
-        creat: {format(new Date(rezervare.created_at), "dd-MM-yyyy")}
+        creat: {format(new Date(rezervare.createdAt), "dd-MM-yyyy")}
       </p>
       <p>
         sosire:{" "}
