@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../../../components/ui/button";
 import { Label } from "../../../components/ui/label";
 import { Input } from "../../../components/ui/input";
-import { addNewReservationToDB } from "../../../lib/actions/rezervari";
+import { addNewReservationToDB } from "../../../lib/actions";
 import { Textarea } from "../../../@/components/ui/textarea";
 import { auth } from "../../lib/auth";
 import {
