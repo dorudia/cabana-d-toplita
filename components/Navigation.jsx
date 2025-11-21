@@ -5,16 +5,25 @@ import { ModeToggle } from "./ModeToggle";
 import SignOutButton from "./SignOutButton";
 
 import HamburgerMenu from "./HamburgerMenu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Navigation = ({ session }) => {
   const [isOpen, setIsOpen] = useState(false);
   console.log("session form navbar 12:", session?.user);
-  if (isOpen) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "auto";
-  }
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isOpen]);
+
+  // if (isOpen) {
+  //   document.body.style.overflow = "hidden";
+  // } else {
+  //   document.body.style.overflow = "auto";
+  // }
 
   let navUlClasses = isOpen
     ? "flex flex-col absolute top-[77px] left-0 w-[100%] pt-16 bg-secondary h-screen items-center justify-top space-y-4 mx-auto font-geist text-xl "
