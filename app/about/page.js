@@ -4,6 +4,8 @@ import cabanaDark from "../../public/cabana-dark-1.jpg";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { set } from "mongoose";
+import ReservationDayPickeer from "../../components/ReservationDatePicker";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const images = Array.from(
   { length: 21 },
@@ -25,12 +27,12 @@ export default function AboutPage() {
   }, [pause, index]);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10 mt-28">
+    <div className="max-w-5xl mx-auto px-4 py-10 mt-24">
       {/* Title */}
       <motion.h1
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-4xl md:text-5xl font-great-vibes text-center mb-6"
+        className="text-5xl md:text-5xl font-great-vibes text-center mb-6 font-greatVibes"
       >
         Povestea Cabanei D
       </motion.h1>
@@ -41,9 +43,10 @@ export default function AboutPage() {
         animate={{ opacity: 1 }}
         className="grid gap-6 items-center p-1"
       >
-        <p className="leading-relaxed text-lg">
+        <p className="leading-relaxed mx-auto text-center font-greatVibes text-2xl md:text-4xl max-w-[90%]">
           Departe de zgomotul orașelor, cabana noastră oferă un refugiu perfect
-          pentru familii, cupluri sau oricine are nevoie să respire aer curat.
+          pentru familii, grupuri sau oricine are nevoie de relaxare si să
+          respire aer curat.
         </p>
         <div className="relative w-full aspect-[16/9] overflow-hidden rounded-xl shadow-lg">
           <motion.div
@@ -63,27 +66,20 @@ export default function AboutPage() {
 
           <button
             onClick={prev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 text-white px-3 py-1 rounded-lg"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 text-stone-300 px-3 py-1 rounded-full aspect-square"
           >
-            ‹
+            <ChevronLeft />
           </button>
           <button
             onClick={next}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 text-white px-3 py-1 rounded-lg"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 text-stone-300 px-3 py-1 rounded-full aspect-square"
           >
-            ›
+            <ChevronRight />
           </button>
         </div>
       </motion.div>
-
-      {/* CTA */}
-      <div className="text-center mt-10">
-        <a
-          href="/rezervari"
-          className="px-6 py-3 bg-emerald-600 text-white rounded-xl hover:scale-105 transition font-medium shadow-lg"
-        >
-          Vezi disponibilitatea 🗓️
-        </a>
+      <div className="w-fit mx-auto mt-6">
+        <ReservationDayPickeer />
       </div>
     </div>
   );

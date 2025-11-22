@@ -17,11 +17,11 @@ export default function Home() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false); // Evită problemele de hidratare
 
-  console.log("TEST?:", name);
-
-  const user = useEffect(() => {
+  useEffect(() => {
     setMounted(true);
   }, []);
+
+  if (!mounted) return null;
 
   const facilitys = [
     {
@@ -63,7 +63,7 @@ export default function Home() {
   return (
     <>
       <section className="flex flex-col items-center justify-between w-full h-dvh relative">
-        {theme === "dark" && (
+        {/* {theme === "dark" && (
           <div
             className="wrapper-lines absolute top-0 left-0 w-full h-full z-[0]"
             style={{
@@ -81,7 +81,7 @@ export default function Home() {
               }}
             ></div>
           </div>
-        )}
+        )} */}
         <Image
           src={theme === "dark" ? cabanaDark : cabanaLight}
           fill
@@ -99,7 +99,7 @@ export default function Home() {
             Lasă în urmă agitația orașului și bucură-te de liniștea munților,
             intr-o cabana din lemn, pe malul râului Toplița.
           </p>
-          <div className="">
+          <div className="inline-block shadow-lg shadow-black/30 absolute left-1/2 -translate-x-1/2 bottom-[-40px]">
             <ReservationDayPicker />
           </div>
         </div>
@@ -118,7 +118,7 @@ export default function Home() {
             className="absolute top-0 left-0 w-full h-full z-[1]"
             style={{
               background: `linear-gradient(to right bottom, #00000050, transparent, transparent, transparent, #00000050)
-         
+
               `,
             }}
           ></div>

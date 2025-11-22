@@ -9,18 +9,29 @@ import { auth } from "../../app/lib/auth";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// export const sendEmail = async (request) => {
+//   console.log("request", request);
+
+//   await resend.emails.send({
+//     from: "OreDev <onboarding@resend.dev>",
+//     to: "dorudia@gmail.com",
+//     subject: "Hello world",
+//     react: Welcome({
+//       name: request.name,
+//       email: request.email,
+//       password: request.password || "",
+//     }),
+//   });
+// };
+
 export const sendEmail = async (request) => {
   console.log("request", request);
 
   await resend.emails.send({
-    from: "OreDev <onboarding@resend.dev>",
+    from: "Cabana D <contact@cabana-d.com>",
     to: "dorudia@gmail.com",
-    subject: "Hello world",
-    react: Welcome({
-      name: request.name,
-      email: request.email,
-      password: request.password || "",
-    }),
+    subject: `Mesaj de la ${request.name} - Cabana D`,
+    react: request.react, // aici trimitem componenta pentru email
   });
 };
 
