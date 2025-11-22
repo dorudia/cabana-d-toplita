@@ -446,6 +446,7 @@ import {
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { X, ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
 import {
   Dialog,
   DialogTrigger,
@@ -611,7 +612,7 @@ function ReservationDatePicker() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="w-[95%] md:w-[700px] p-8 sm:p-12 bg-secondary/90 rounded-[12px] outline outline-1 outline-offset-[-8px] outline-primary relative flex flex-col items-center sm:max-h-[80vh] !overflow-y-scroll -webkit-overflow-scrolling-touch">
+      <DialogContent className="w-[95%] md:w-[700px] p-8 sm:p-12 bg-secondary/90 rounded-[12px] outline outline-1 outline-offset-[-8px] outline-primary relative flex flex-col items-center !max-h-[90%] !overflow-y-scroll -webkit-overflow-scrolling-touch">
         <DialogHeader>
           <DialogTitle className="text-2xl mb-4">Selectează datele</DialogTitle>
         </DialogHeader>
@@ -730,7 +731,11 @@ function ReservationDatePicker() {
 
         <DialogFooter className="mt-4 md:mt-10  flex flex-col !items-center justify-center">
           {range?.from && range?.to && (
-            <div className="flex text-xl text-center md:mt-4 border border-primary bg-white text-slate-800 items-center justify-center h-auto gap-2 px-2 py-2 md:px-4 md:py-4 my-2 rounded-sm">
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex text-xl text-center md:mt-4 border border-primary bg-white text-slate-800 items-center justify-center h-auto gap-2 px-2 py-2 md:px-4 md:py-4 my-2 rounded-sm"
+            >
               {`${format(range.from, "dd.MM.yyyy")} / ${format(
                 range.to,
                 "dd.MM.yyyy"
@@ -738,7 +743,7 @@ function ReservationDatePicker() {
 
               {numNights ? `- ${numNights} Nopti,  ` : null}
               {numNights ? `Pret: ${numNights * pretNoapte} RON` : null}
-            </div>
+            </motion.div>
           )}
           <Button
             onClick={handleAddReservation}

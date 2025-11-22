@@ -40,7 +40,7 @@ const MyImage = ({ src }) => {
         <DialogTitle />
         <DialogDescription />
 
-        <DialogContent className="h-[85%] aspect-video">
+        <DialogContent className="h-[85%] max-w-[90%] aspect-video">
           <div className="relative h-80%">
             <DialogClose className="absolute z-10 right-0">
               <span className="bg-primary text-secondary px-2 py-1 rounded-md text-xl">
