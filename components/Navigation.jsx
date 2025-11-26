@@ -33,8 +33,12 @@ const Navigation = ({ session }) => {
   return (
     <div className="p-2 py-6 dark:bg-slate-900/80 text-slate-900-foreground border-b bg-slate-200/70 backdrop-blur-sm border-slate-400/20 fixed tracking-wider top-0 w-full z-20">
       <nav className="flex items-center justify-between max-w-7xl mx-auto font-geist text-xl ">
-        <Link onClick={() => setIsOpen(false)} href="/">
-          Home logo
+        <Link
+          className="font-greatVibes font-bold text-xl md:text-2xl text-center  cursor-pointer"
+          onClick={() => setIsOpen(false)}
+          href="/"
+        >
+          Cabana D
         </Link>
         <ul className={navUlClasses}>
           <li className="flex md:hidden" onClick={() => setIsOpen(false)}>

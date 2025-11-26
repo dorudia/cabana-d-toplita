@@ -9,6 +9,7 @@ const ReservationSchema = new mongoose.Schema(
     innoptari: { type: Number, required: true },
     numOaspeti: { type: Number, required: true },
     pretTotal: { type: Number, required: true },
+    sessionId: { type: String, required: true, unique: true },
     observatii: { type: String, default: "" },
   },
   { timestamps: true }

@@ -8,7 +8,7 @@ import ReservationDayPickeer from "../../components/ReservationDatePicker";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const images = Array.from(
-  { length: 21 },
+  { length: 20 },
   (_, i) => `/slide-site/cabana-${i + 1}.jpeg`
 );
 
