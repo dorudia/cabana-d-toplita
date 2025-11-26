@@ -1,22 +1,15 @@
 import Stripe from "stripe";
 
-const stripeSecretKey =
-  process.env.NODE_ENV === "production"
-    ? process.env.STRIPE_SECRET_KEY
-    : process.env.STRIPE_SECRET_KEY_TEST;
-
-const appUrl =
-  process.env.NODE_ENV === "production"
-    ? process.env.NEXT_PUBLIC_APP_URL
-    : process.env.NEXT_PUBLIC_APP_URL_TEST;
-
-const stripe = new Stripe(stripeSecretKey, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY_TEST, {
   apiVersion: "2025-11-17.clover",
 });
 
+const appUrl = "http://localhost:3000"; // local doar pentru test
+
 export async function POST(req) {
   try {
-    const { userEmail, description, amount } = await req.json();
+    const { userEmail, dataSosirii, dataPlecarii, pretTotal } =
+      await req.json();
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -25,8 +18,10 @@ export async function POST(req) {
         {
           price_data: {
             currency: "ron",
-            product_data: { name: description },
-            unit_amount: amount * 100,
+            product_data: {
+              name: `Rezervare: ${dataSosirii} - ${dataPlecarii}`,
+            },
+            unit_amount: pretTotal * 100,
           },
           quantity: 1,
         },
@@ -38,12 +33,15 @@ export async function POST(req) {
 
     console.log("✅ Checkout session creat:", session.id);
 
-    return new Response(JSON.stringify({ url: session.url }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ url: session.url, sessionId: session.id }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (err) {
-    console.error("Checkout session error:", err);
+    console.error("❌ Checkout session error:", err);
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

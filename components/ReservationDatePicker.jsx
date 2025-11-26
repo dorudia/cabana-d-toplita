@@ -58,30 +58,62 @@ function ReservationDatePicker() {
   const [range, setRange] = useState({ from: undefined, to: undefined });
   const [error, setError] = useState("");
 
-  const handleCheckout = async (reservationData, pretTotal) => {
+  // const handleCheckout = async (reservationData, pretTotal) => {
+  //   try {
+  //     const res = await fetch("/api/checkout_sessions", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         userEmail: reservationData.userEmail,
+  //         description: `Rezervare cabană: ${reservationData.dataSosirii} - ${reservationData.dataPlecarii}`,
+  //         amount: pretTotal,
+  //       }),
+  //     });
+
+  //     const data = await res.json();
+  //     console.log("Response from server:", data);
+
+  //     if (data.url) {
+  //       window.location.href = data.url;
+  //     } else {
+  //       console.error("Checkout error:", data.error || "Unknown error");
+  //     }
+  //   } catch (err) {
+  //     console.error("HandleCheckout failed:", err);
+  //   }
+  // };
+
+  async function handleCheckout() {
+    const reservationData = {
+      userName: "Test User",
+      userEmail: "test@example.com",
+      dataSosirii: range.from.toISOString().split("T")[0],
+      dataPlecarii: range.to.toISOString().split("T")[0],
+      innoptari: 2,
+      numOaspeti: 2,
+      pretTotal: 100,
+    };
+
     try {
       const res = await fetch("/api/checkout_sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userEmail: reservationData.userEmail,
-          description: `Rezervare cabană: ${reservationData.dataSosirii} - ${reservationData.dataPlecarii}`,
-          amount: pretTotal,
-        }),
+        body: JSON.stringify(reservationData),
       });
 
       const data = await res.json();
       console.log("Response from server:", data);
 
       if (data.url) {
-        window.location.href = data.url;
+        window.location.href = data.url; // mergem pe Stripe Checkout
       } else {
-        console.error("Checkout error:", data.error || "Unknown error");
+        toast.error("Eroare la inițierea plății");
       }
     } catch (err) {
-      console.error("HandleCheckout failed:", err);
+      console.error(err);
+      toast.error("Eroare la fetch");
     }
-  };
+  }
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
