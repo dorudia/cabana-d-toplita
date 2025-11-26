@@ -10,12 +10,13 @@ const appUrl =
     ? process.env.NEXT_PUBLIC_APP_URL
     : process.env.NEXT_PUBLIC_APP_URL_TEST;
 
-const stripe = new Stripe(stripeSecretKey);
+const stripe = new Stripe(stripeSecretKey, {
+  apiVersion: "2025-11-17.clover",
+});
 
 export async function POST(req) {
   try {
     const { userEmail, description, amount } = await req.json();
-    console.log("DATA FROM FRONTEND:", { userEmail, description, amount });
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -31,18 +32,21 @@ export async function POST(req) {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/cancel`,
+      success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/cancel`,
     });
+
+    console.log("✅ Checkout session creat:", session.id);
 
     return new Response(JSON.stringify({ url: session.url }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
-    // } catch (err) {
-    console.error("Stripe full error:", err); // ← vezi TOT stack-ul
-    console.error("Stripe error message:", err.message); // ← doar mesajul
-    return Response.json({ error: err.message }, { status: 500 });
+    console.error("Checkout session error:", err);
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }

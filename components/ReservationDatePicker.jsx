@@ -57,43 +57,31 @@ function ReservationDatePicker() {
   const copiiRef = useRef();
   const [range, setRange] = useState({ from: undefined, to: undefined });
   const [error, setError] = useState("");
-  const stripePromise = loadStripe(
-    process.env.NODE_ENV === "production"
-      ? process.env.NEXT_PUBLIC_STRIPE_PUBISHABLE_KEY
-      : process.env.NEXT_PUBLIC_STRIPE_PUBISHABLE_KEY_TEST
-  );
 
-  async function handleCheckout(reservationData, pretTotal) {
+  const handleCheckout = async (reservationData, pretTotal) => {
     try {
-      // 1️⃣ Pregătim datele pentru backend
-      const payload = {
-        userEmail: reservationData.userEmail,
-        description: `Rezervare cabană: ${reservationData.dataSosirii} - ${reservationData.dataPlecarii}`,
-        amount: pretTotal,
-        reservationData,
-      };
-
-      // 2️⃣ Trimitem request către server
       const res = await fetch("/api/checkout_sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          userEmail: reservationData.userEmail,
+          description: `Rezervare cabană: ${reservationData.dataSosirii} - ${reservationData.dataPlecarii}`,
+          amount: pretTotal,
+        }),
       });
 
       const data = await res.json();
+      console.log("Response from server:", data);
 
-      // 3️⃣ Dacă serverul a returnat url-ul de checkout, redirecționăm
       if (data.url) {
-        window.location.href = data.url; // simplu, fără stripePromise
-      } else if (data.error) {
-        console.error("Checkout error:", data.error);
-        toast.error("Eroare la inițierea plății.");
+        window.location.href = data.url;
+      } else {
+        console.error("Checkout error:", data.error || "Unknown error");
       }
     } catch (err) {
       console.error("HandleCheckout failed:", err);
-      toast.error("Eroare la inițierea plății.");
     }
-  }
+  };
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
