@@ -263,7 +263,7 @@ export async function POST(req) {
     }
 
     return new Response(
-      JSON.stringify({ message: "Event primit, nici o rezervare creată" }),
+      JSON.stringify({ message: "Rezervare creată cu succes!" }),
       { status: 200 }
     );
   } catch (err) {

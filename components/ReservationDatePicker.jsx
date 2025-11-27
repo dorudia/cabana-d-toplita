@@ -147,20 +147,6 @@ function ReservationDatePicker({ isAdmin }) {
     getReservation();
   }, [open]);
 
-  // useEffect(() => {
-  //   async function fetchReservations() {
-  //     const res = await fetch("/api/reservations");
-  //     const data = await res.json();
-  //     const rezervari = (data.rezervari || []).map((res) => ({
-  //       ...res,
-  //       dataSosirii: new Date(res.dataSosirii),
-  //       dataPlecarii: new Date(res.dataPlecarii),
-  //     }));
-  //     setAllReservations(rezervari);
-  //   }
-  //   fetchReservations();
-  // }, [reload]);
-
   useEffect(() => {
     async function fetchSettings() {
       const res = await fetch("/api/settings");
@@ -211,70 +197,6 @@ function ReservationDatePicker({ isAdmin }) {
       await handleCheckout(reservationData);
     }
   };
-
-  // const handleAddReservation = async () => {
-  //   if (!session?.user?.email) {
-  //     toast.error("Sejur minim de " + minNights + " nopti.", {
-  //       duration: 9000,
-  //       variant: "destructive",
-  //       action: {
-  //         label: "Mergi la login",
-  //         onClick: () => (window.location.href = "/login"),
-  //       },
-  //     });
-  //     return;
-  //   }
-
-  //   if (!range?.from || !range?.to) {
-  //     toast.error("Selectează data de sosire și de plecare.", {
-  //       duration: 5000,
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
-
-  //   const adultii = Number(adultiRef.current.value);
-  //   const copii = Number(copiiRef.current.value);
-  //   const numOaspeti = adultii + copii;
-  //   const innoptari = differenceInDays(range.to, range.from);
-  //   const pretTotal = innoptari * pretNoapte;
-
-  //   console.log("Go to CheckoutPage");
-
-  //   // await handleCheckout();
-
-  //   try {
-  //     const response = await fetch("/api/reservations", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         userName: session.user.name,
-  //         userEmail: session.user.email,
-  //         dataSosirii: format(range.from, "yyyy.MM.dd"),
-  //         dataPlecarii: format(range.to, "yyyy.MM.dd"),
-  //         innoptari,
-  //         numOaspeti,
-  //         pretTotal,
-  //       }),
-  //     });
-
-  //     const result = await response.json();
-
-  //     if (result.error) {
-  //       toast.error(result.error, { duration: 5000, variant: "destructive" });
-  //     } else {
-  //       toast.success(result.message, { duration: 5000 });
-  //       setReload((prev) => !prev);
-  //       setRange({ from: undefined, to: undefined });
-  //     }
-  //   } catch (err) {
-  //     toast.error("Eroare la crearea rezervării.", {
-  //       duration: 5000,
-  //       variant: "destructive",
-  //     });
-  //     console.error(err);
-  //   }
-  // };
 
   return (
     <Dialog
