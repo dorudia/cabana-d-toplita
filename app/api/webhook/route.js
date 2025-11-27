@@ -209,7 +209,7 @@ export async function POST(req) {
         dataPlecarii,
         numOaspeti: Number(numOaspeti),
         innoptari: Number(innoptari),
-        pretTotal: Number(pretTotal),
+        pretTotal: Number(pretTotal) / 100,
         sessionId: session.id,
       });
 
@@ -241,17 +241,17 @@ export async function POST(req) {
         html: `<h2>Rezervarea ta este confirmată!</h2>
                <p><strong>${dataFormataSosire} → ${dataFormataPlec}</strong></p>
                <p>Nr. oaspeți: ${numOaspeti}</p>
-               <p>Total: ${pretTotal} RON</p>`,
+               <p>Total: ${pretTotal / 100} RON</p>`,
       });
 
       // email admin
       await transporter.sendMail({
         from: `"Cabana D" <${process.env.GMAIL_USER}>`,
-        to: ["dorudia@gmail.com", "elamoldovan12@gmailcom"],
+        to: ["dorudia@gmail.com", "elamoldovan12@gmail.com"],
         subject: "📢 Nouă rezervare!",
         html: `<h2>Nouă rezervare creată pentru perioada ${dataFormataSosire} - ${dataFormataPlec}</h2>
                <p>Nr. oaspeți: ${numOaspeti}</p>
-               <p>Total: ${pretTotal} RON</p>`,
+               <p>Total: ${pretTotal / 100} RON</p>`,
       });
 
       return new Response(
