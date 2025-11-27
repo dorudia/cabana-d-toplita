@@ -17,6 +17,7 @@ import {
   addNewReservationToDB,
   getReservations,
   getSettings,
+  getUserReservations,
 } from "../lib/actions";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
@@ -27,12 +28,14 @@ import {
   DialogTrigger,
   DialogContent,
   DialogHeader,
+  DialogDescription,
   DialogTitle,
   DialogFooter,
   DialogClose,
 } from "../@/components/ui/dialog"; // ajustează importul dacă ai alt path
-import { useRouter } from "next/router";
 import { loadStripe } from "@stripe/stripe-js";
+import { get } from "mongoose";
+import { useRouter } from "next/navigation";
 
 function isAlreadyBooked(range, datesArr) {
   if (!range?.from || !range?.to) return false;
@@ -47,7 +50,7 @@ function isAlreadyBooked(range, datesArr) {
   );
 }
 
-function ReservationDatePicker() {
+function ReservationDatePicker({ isAdmin }) {
   const { data: session } = useSession();
   const [allReservations, setAllReservations] = useState([]);
   const [settings, setSettings] = useState({});
@@ -57,63 +60,39 @@ function ReservationDatePicker() {
   const copiiRef = useRef();
   const [range, setRange] = useState({ from: undefined, to: undefined });
   const [error, setError] = useState("");
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
 
-  // const handleCheckout = async (reservationData, pretTotal) => {
-  //   try {
-  //     const res = await fetch("/api/checkout_sessions", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         userEmail: reservationData.userEmail,
-  //         description: `Rezervare cabană: ${reservationData.dataSosirii} - ${reservationData.dataPlecarii}`,
-  //         amount: pretTotal,
-  //       }),
-  //     });
-
-  //     const data = await res.json();
-  //     console.log("Response from server:", data);
-
-  //     if (data.url) {
-  //       window.location.href = data.url;
-  //     } else {
-  //       console.error("Checkout error:", data.error || "Unknown error");
-  //     }
-  //   } catch (err) {
-  //     console.error("HandleCheckout failed:", err);
-  //   }
-  // };
-
-  async function handleCheckout() {
-    const reservationData = {
-      userName: "Test User",
-      userEmail: "test@example.com",
-      dataSosirii: range.from.toISOString().split("T")[0],
-      dataPlecarii: range.to.toISOString().split("T")[0],
-      innoptari: 2,
-      numOaspeti: 2,
-      pretTotal: 100,
-    };
-
+  const handleCheckout = async (reservationData) => {
     try {
+      const priceWithDecimals = Math.round(reservationData.pretTotal * 100); // Stripe cere integer
+
       const res = await fetch("/api/checkout_sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reservationData),
+        body: JSON.stringify({
+          userEmail: reservationData.userEmail,
+          userName: reservationData.userName,
+          dataSosirii: reservationData.dataSosirii,
+          dataPlecarii: reservationData.dataPlecarii,
+          numOaspeti: reservationData.numOaspeti,
+          description: `Rezervare cabană: ${reservationData.dataSosirii} - ${reservationData.dataPlecarii}`,
+          amount: priceWithDecimals,
+        }),
       });
 
       const data = await res.json();
       console.log("Response from server:", data);
 
       if (data.url) {
-        window.location.href = data.url; // mergem pe Stripe Checkout
+        window.location.href = data.url;
       } else {
-        toast.error("Eroare la inițierea plății");
+        console.error("Checkout error:", data.error || "Unknown error");
       }
     } catch (err) {
-      console.error(err);
-      toast.error("Eroare la fetch");
+      console.error("HandleCheckout failed:", err);
     }
-  }
+  };
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -155,19 +134,31 @@ function ReservationDatePicker() {
     return days;
   });
 
+  async function getReservation() {
+    const reservations = await getReservations();
+    setAllReservations(reservations);
+  }
   useEffect(() => {
-    async function fetchReservations() {
-      const res = await fetch("/api/reservations");
-      const data = await res.json();
-      const rezervari = (data.rezervari || []).map((res) => ({
-        ...res,
-        dataSosirii: new Date(res.dataSosirii),
-        dataPlecarii: new Date(res.dataPlecarii),
-      }));
-      setAllReservations(rezervari);
-    }
-    fetchReservations();
+    getReservation();
   }, [reload]);
+
+  useEffect(() => {
+    getReservation();
+  }, [open]);
+
+  // useEffect(() => {
+  //   async function fetchReservations() {
+  //     const res = await fetch("/api/reservations");
+  //     const data = await res.json();
+  //     const rezervari = (data.rezervari || []).map((res) => ({
+  //       ...res,
+  //       dataSosirii: new Date(res.dataSosirii),
+  //       dataPlecarii: new Date(res.dataPlecarii),
+  //     }));
+  //     setAllReservations(rezervari);
+  //   }
+  //   fetchReservations();
+  // }, [reload]);
 
   useEffect(() => {
     async function fetchSettings() {
@@ -194,7 +185,7 @@ function ReservationDatePicker() {
     const adultii = Number(adultiRef.current.value);
     const copii = Number(copiiRef.current.value);
     const innoptari = differenceInDays(range.to, range.from);
-    const pretTotal = innoptari * pretNoapte;
+    const pretTotal = Number(innoptari * pretNoapte);
 
     const reservationData = {
       userName: session.user.name,
@@ -206,7 +197,18 @@ function ReservationDatePicker() {
       pretTotal,
     };
 
-    await handleCheckout(reservationData, pretTotal);
+    if (isAdmin) {
+      await addNewReservationToDB({
+        ...reservationData,
+        isAdmin,
+        sessionId: "dd",
+      });
+      setRange({ from: undefined, to: undefined });
+      await getReservation();
+      window.location.reload();
+    } else {
+      await handleCheckout(reservationData);
+    }
   };
 
   // const handleAddReservation = async () => {
@@ -274,39 +276,102 @@ function ReservationDatePicker() {
   // };
 
   return (
-    <Dialog className="!max-h-[80vh] !overflow-y-auto">
+    <Dialog
+      className="!max-h-[80vh] !overflow-y-auto"
+      open={open}
+      onOpenChange={setOpen}
+    >
       <DialogTrigger asChild>
-        <Button className="text-xl flex flex-wrap items-center justify-center h-auto gap-2 px-2 py-2 md:px-4 md:py-4 my-2 border font-sans">
-          Verifica Disponibilitate
+        <Button
+          className="text-xl flex flex-wrap items-center justify-center h-auto gap-2 px-2 py-2 md:px-4 md:py-4 my-2 border font-sans"
+          style={
+            isAdmin && {
+              padding: "8px 16px",
+              fontSize: "16px",
+              margin: "0 auto",
+            }
+          }
+        >
+          {!isAdmin ? "Verifica Disponibilitate" : "Adaugare Rezervare"}
         </Button>
       </DialogTrigger>
 
       <DialogContent className="w-[95%] md:w-[700px] p-8 sm:p-12 bg-secondary/90 rounded-[12px] outline outline-1 outline-offset-[-8px] outline-primary relative flex flex-col items-center !max-h-[90%] !overflow-y-scroll -webkit-overflow-scrolling-touch">
         <DialogHeader>
           <DialogTitle className="text-2xl mb-4">Selectează datele</DialogTitle>
+          <DialogDescription>
+            selecteaza data sosirii si plecarii
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-6 md:max-w-[700px] mx-auto w-full">
+        <div className="grid gap-6 md:max-w-[700px] mx-auto w-full md:mb-6">
           <div className="grid gap-6 mb-4">
             <div className="grid gap-2 grid-cols-2">
               <div className="grid gap-2">
                 <Label className="text-lg font-geist" htmlFor="adulti">
                   Adulti
                 </Label>
-                <select
-                  ref={adultiRef}
-                  name="adulti"
-                  id="adulti"
-                  className="p-2 border-[1px] border-prymary focus:ring-1 focus:ring-primary/30 rounded-md"
-                >
-                  {Array(8)
-                    .fill()
-                    .map((_, i) => (
-                      <option key={i}>{i + 1}</option>
-                    ))}
-                </select>
+                <div className="relative inline-block w-full">
+                  <select
+                    ref={adultiRef}
+                    className="p-2 border border-primary rounded-md w-full appearance-none"
+                  >
+                    {Array(8)
+                      .fill()
+                      .map((_, i) => (
+                        <option key={i}>{i + 1}</option>
+                      ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <svg
+                      className="w-4 h-4 dark:text-gray-200 text-gray-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
               </div>
               <div className="grid gap-2">
+                <Label className="text-lg font-geist" htmlFor="adulti">
+                  Copii
+                </Label>
+                <div className="relative inline-block w-full">
+                  <select
+                    ref={copiiRef}
+                    className="p-2 border border-primary rounded-md w-full appearance-none"
+                  >
+                    {Array(6)
+                      .fill()
+                      .map((_, i) => (
+                        <option key={i}>{i + 1}</option>
+                      ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <svg
+                      className="w-4 h-4 dark:text-gray-200 text-gray-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              {/* <div className="grid gap-2">
                 <Label className="text-lg font-geist" htmlFor="copii">
                   Copii
                 </Label>
@@ -322,7 +387,7 @@ function ReservationDatePicker() {
                       <option key={i}>{i}</option>
                     ))}
                 </select>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

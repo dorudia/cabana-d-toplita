@@ -9,14 +9,19 @@ const ReservationSchema = new mongoose.Schema(
     innoptari: { type: Number, required: true },
     numOaspeti: { type: Number, required: true },
     pretTotal: { type: Number, required: true },
-    sessionId: { type: String, required: true, unique: true },
+    isAdmin: { type: Boolean, default: false },
+    // 🔹 doar dacă NU e admin => devine obligatoriu (Stripe/session)
+    sessionId: {
+      type: String,
+      required: function () {
+        return !this.isAdmin;
+      },
+      unique: true,
+    },
     observatii: { type: String, default: "" },
   },
   { timestamps: true }
 );
-
-// Fallback global pentru mongoose.models
-if (!mongoose.models) mongoose.models = {};
 
 export default mongoose.models.Reservation ||
   mongoose.model("Reservation", ReservationSchema);

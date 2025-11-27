@@ -16,7 +16,7 @@ import { Button } from "./ui/button";
 
 import { Label } from "../@/components/ui/label";
 import { Textarea } from "../@/components/ui/textarea";
-import { addObservatii, deleteReservation } from "../app/lib/actions";
+import { addObservatii, deleteReservation } from "@/lib/actions";
 import { toast } from "sonner";
 
 const Rezervare = ({ rezervare, getAllReservations }) => {
@@ -24,7 +24,7 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
   const closeBtnRef = useRef();
 
   const handleAddObservations = async () => {
-    const id = rezervare.id;
+    const id = rezervare._id;
     await addObservatii(id, textareaRef.current.value);
     getAllReservations();
     closeBtnRef.current.click();
@@ -36,7 +36,8 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
         `sigur vrei sa stergi rezervarea ${format(rezervare.dataSosirii, "dd-MM-yyyy")}/${format(rezervare.dataPlecarii, "dd-MM-yyyy")} ? ${rezervare.dataPlecarii} `
       )
     ) {
-      const response = await deleteReservation(rezervare.id);
+      const response = await deleteReservation(rezervare._id);
+      getAllReservations();
       toast.success(response, {
         duration: 6000,
         variant: "default",
@@ -82,10 +83,13 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
             observatii: {rezervare.observatii}
           </p>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent
+          className="max-w-[90%]  md:max-w-[50%] w-full"
+          aria-describedby="descriere-dialog"
+        >
           <DialogHeader>
             <DialogTitle className="capitalize">adauga observatii</DialogTitle>
-            <DialogDescription></DialogDescription>
+            <DialogDescription>detaliile rezervarii</DialogDescription>
           </DialogHeader>
           <div className="grid gap-2">
             <Label htmlFor="observatii" className="text-xl">
@@ -101,7 +105,9 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
               defaultValue={rezervare.observatii}
             />
           </div>
-          <Button onClick={handleAddObservations}>Adauga</Button>
+          <Button className="font-bold" onClick={handleAddObservations}>
+            ADAUGA
+          </Button>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <Button

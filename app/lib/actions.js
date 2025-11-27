@@ -25,7 +25,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // };
 
 export const sendEmail = async (request) => {
-  console.log("request", request);
+  // console.log("request", request);
 
   await resend.emails.send({
     from: "Cabana D <contact@cabana-d.com>",
@@ -53,7 +53,7 @@ export async function signInWithFacebook() {
 }
 
 export async function signInWithCredentials(name, email, password) {
-  console.log("signInWithCredentials:?:?:?", name, email, password);
+  // console.log("signInWithCredentials:?:?:?", name, email, password);
   await signIn("credentials", {
     name,
     email,
@@ -96,7 +96,7 @@ export async function findUserInDB(formData, checkPasswordMatch) {
   if (users && users.length > 0 && checkPasswordMatch) {
     const user = users[0];
     if (user.password === enteredPassword) {
-      console.log("user???", user);
+      // console.log("user???", user);
       return user;
     } else {
       throw new Error("Wrong password");
@@ -139,11 +139,11 @@ export const searchUserInDBAndSendEmail = async (session) => {
   if (users && users.length > 0) {
     const user = users[0];
 
-    console.log("user in db", user);
+    // console.log("user in db", user);
     return;
   }
   if (!users || users.length === 0) {
-    console.log("user not in db", session?.user, "session:", session);
+    // console.log("user not in db", session?.user, "session:", session);
 
     await addNewUserToDB(session?.user?.name, session?.user?.email);
     await sendEmail({
@@ -168,7 +168,6 @@ export const getUserReservations = async (email) => {
 };
 
 export const getReservations = async () => {
-  console.log("getAllReservations");
   let { data: rezervari, error } = await supabase
     .from("rezervari")
     .select("*")
@@ -181,7 +180,7 @@ export const getReservations = async () => {
 };
 
 export const addNewReservationToDB = async (rezervare) => {
-  console.log("rezervare::::", rezervare);
+  // console.log("rezervare::::", rezervare);
   const { data, error } = await supabase
     .from("rezervari")
     .insert({ ...rezervare })

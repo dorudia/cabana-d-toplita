@@ -7,6 +7,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY_TEST, {
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_TEST;
 
 export async function POST(req) {
+  console.log("🎯 WEBHOOK ATINS");
   try {
     // ⚡️ Folosim arrayBuffer pentru a obține raw body
     const buf = Buffer.from(await req.arrayBuffer());

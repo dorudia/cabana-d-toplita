@@ -328,6 +328,10 @@
   .rdp-months {
     width: min-content;
   }
+  .rdp-month {
+    margin: 12px 0 !important;
+    transform: scale(1.1);
+  }
 }
 
 .rdp-month_grid {

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 const Navigation = ({ session }) => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log("session form navbar 12:", session?.user);
+  // console.log("session form navbar 12:", session?.user);
 
   useEffect(() => {
     if (isOpen) {
