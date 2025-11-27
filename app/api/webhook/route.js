@@ -23,3 +23,9 @@
 //     return new Response(`Webhook Error: ${err.message}`, { status: 400 });
 //   }
 // }
+export async function POST(req) {
+  return new Response(JSON.stringify({ message: "Webhook disabled" }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
+}
