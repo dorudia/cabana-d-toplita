@@ -262,9 +262,11 @@ export async function POST(req) {
       );
     }
 
-    return new Response(JSON.stringify({ received: true }), { status: 200 });
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (err) {
-    console.error("⚠️ Webhook Error:", err);
-    return new Response(`Webhook Error: ${err.message}`, { status: 500 });
+    console.error("⚠️ Webhook Error:", err.message);
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 400,
+    });
   }
 }
