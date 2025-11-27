@@ -9,21 +9,34 @@ export default function SuccessPage() {
   const sessionId = searchParams.get("session_id");
 
   useEffect(() => {
-    async function confirmReservation() {
-      if (!sessionId) return setMessage("session_id lipsă");
-
+    const confirmReservation = async () => {
       try {
-        const res = await fetch("/api/reservations", {
+        const res = await fetch("/api/webhook", {
           method: "POST",
+          body: JSON.stringify({ sessionId }), // trimite sessionId dacă ai
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sessionId }),
         });
-        const data = await res.json();
-        setMessage(data.error || "Rezervarea a fost confirmată! 🎉");
+
+        let data;
+        try {
+          data = await res.json(); // încearcă să parsezi JSON
+        } catch (err) {
+          console.warn("⚠️ Răspuns non-JSON de la server:", err);
+          data = null;
+        }
+
+        if (res.ok) {
+          setMessage("Rezervarea a fost confirmată cu succes!");
+        } else {
+          setMessage(`Eroare la confirmare: ${data?.error || res.statusText}`);
+        }
       } catch (err) {
-        setMessage(`Eroare: ${err.message}`);
+        console.error("Fetch error:", err);
+        setMessage("Eroare la comunicarea cu serverul.");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
     confirmReservation();
   }, [sessionId]);
