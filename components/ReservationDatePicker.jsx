@@ -75,9 +75,10 @@ function ReservationDatePicker({ isAdmin }) {
           userName: reservationData.userName,
           dataSosirii: reservationData.dataSosirii,
           dataPlecarii: reservationData.dataPlecarii,
+          innoptari: reservationData.innoptari,
           numOaspeti: reservationData.numOaspeti,
           description: `Rezervare cabană: ${reservationData.dataSosirii} - ${reservationData.dataPlecarii}`,
-          amount: priceWithDecimals,
+          pretTotal: priceWithDecimals,
         }),
       });
 

@@ -19,11 +19,12 @@ export async function POST(req) {
       dataSosirii,
       dataPlecarii,
       numOaspeti,
+      innoptari,
       description,
-      amount,
+      pretTotal,
     } = await req.json();
 
-    console.log("Creating Stripe session with amount:", amount);
+    console.log("Creating Stripe session with amount:", pretTotal);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -35,7 +36,7 @@ export async function POST(req) {
             product_data: {
               name: `Rezervare: ${dataSosirii} - ${dataPlecarii}`,
             },
-            unit_amount: Number(amount),
+            unit_amount: Number(pretTotal),
           },
           quantity: 1,
         },
@@ -45,11 +46,13 @@ export async function POST(req) {
       cancel_url: `${appUrl}/cancel`,
       metadata: {
         userName,
-        userEmail,
         dataSosirii,
         dataPlecarii,
-        numOaspeti,
-        pretTotal: amount / 100,
+        userEmail,
+        description,
+        numOaspeti: String(numOaspeti),
+        innoptari: String(innoptari),
+        pretTotal: String(pretTotal),
       },
     });
 

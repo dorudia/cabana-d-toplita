@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { dbConnect } from "../../../lib/db";
 import Rezervation from "../../../models/Reservation";
 import Stripe from "stripe";
+import nodemailer from "nodemailer";
 
 const stripeSecretKey =
   process.env.NODE_ENV === "production"
@@ -25,6 +26,7 @@ export async function POST(req) {
         userEmail,
         dataSosirii,
         dataPlecarii,
+        innoptari,
         numOaspeti,
         pretTotal,
       } = session.metadata;
@@ -35,9 +37,51 @@ export async function POST(req) {
         dataSosirii,
         dataPlecarii,
         numOaspeti: Number(numOaspeti),
-        innoptari: Math.ceil(pretTotal / 900),
+        innoptari: Number(innoptari),
         pretTotal: Number(pretTotal),
         sessionId: body.sessionId,
+      });
+
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.GMAIL_USER, // ex: cabana.d@gmail.com
+          pass: process.env.GMAIL_PASS, // parola sau App Password
+        },
+      });
+
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        const dd = String(date.getDate()).padStart(2, "0");
+        const mm = String(date.getMonth() + 1).padStart(2, "0");
+        const yy = String(date.getFullYear()).slice(-2);
+        return `${dd}/${mm}/${yy}`;
+      }
+
+      const dataFormataSosire = formatDate(dataSosirii);
+      const dataFormataPlec = formatDate(dataPlecarii);
+
+      await transporter.sendMail({
+        from: `"Cabana D" <${process.env.EMAIL_USER}>`,
+        to: userEmail, // clientul
+        subject: "Rezervare confirmată 🎉",
+        html: `
+    <h2>Rezervarea ta este confirmată!</h2>
+    <p><strong>${dataFormataSosire} → ${dataFormataPlec}</strong></p>
+    <p>Nr. oaspeți: ${numOaspeti}</p>
+    <p>Total: ${pretTotal} RON</p>
+  `,
+      });
+
+      // + email către tine (admin)
+      await transporter.sendMail({
+        from: `"Cabana D" <${process.env.EMAIL_USER}>`,
+        to: "dorudia@gmail.com",
+        subject: "📢 Nouă rezervare!",
+        html: `<h2>Nouă rezervare creată pentru perioada ${dataFormataSosire} - ${dataFormataPlec}</h2>
+        <p>Nr. oaspeți: ${numOaspeti}</p>
+        <p>Total: ${pretTotal} RON</p>
+        `,
       });
 
       return NextResponse.json({
