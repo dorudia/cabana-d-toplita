@@ -239,6 +239,7 @@ export async function POST(req) {
         to: userEmail,
         subject: "Rezervare confirmată 🎉",
         html: `<h2>Rezervarea ta este confirmată!</h2>
+               <p><strong>${userName}</strong></p>
                <p><strong>${dataFormataSosire} → ${dataFormataPlec}</strong></p>
                <p>Nr. oaspeți: ${numOaspeti}</p>
                <p>Total: ${pretTotal / 100} RON</p>`,
@@ -250,8 +251,9 @@ export async function POST(req) {
         to: ["dorudia@gmail.com", "elamoldovan12@gmail.com"],
         subject: "📢 Nouă rezervare!",
         html: `<h2>Nouă rezervare creată pentru perioada ${dataFormataSosire} - ${dataFormataPlec}</h2>
+               <p><strong>Nume: ${userName}</strong></p>
                <p>Nr. oaspeți: ${numOaspeti}</p>
-               <p>Total: ${pretTotal / 100} RON</p>`,
+               <p>Pret: ${pretTotal / 100} RON</p>`,
       });
 
       return new Response(
