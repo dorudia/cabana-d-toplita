@@ -247,7 +247,7 @@ export async function POST(req) {
       // email admin
       await transporter.sendMail({
         from: `"Cabana D" <${process.env.GMAIL_USER}>`,
-        to: "dorudia@gmail.com",
+        to: ["dorudia@gmail.com", "elamoldovan12@gmailcom"],
         subject: "📢 Nouă rezervare!",
         html: `<h2>Nouă rezervare creată pentru perioada ${dataFormataSosire} - ${dataFormataPlec}</h2>
                <p>Nr. oaspeți: ${numOaspeti}</p>
