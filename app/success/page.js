@@ -1,15 +1,15 @@
-// app/cancel/page.jsx
+"use client";
 import { useRouter } from "next/navigation";
 
-export default function CancelPage() {
+export default function SuccessPage() {
   const router = useRouter();
 
   return (
     <div style={{ padding: "40px", textAlign: "center", paddingTop: "120px" }}>
       <h1 style={{ fontSize: "24px", marginBottom: "20px" }}>
-        Plata a fost anulată ❌
+        Rezervarea a fost confirmată! 🎉
       </h1>
-      <p>Dacă vrei, poți încerca din nou sau reveni pe homepage.</p>
+      <p>Mulțumim pentru rezervare. Vei primi un email de confirmare.</p>
       <button
         onClick={() => router.push("/")}
         style={{

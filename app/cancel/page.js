@@ -1,22 +1,30 @@
+"use client";
+import { useRouter } from "next/navigation";
+
 export default function CancelPage() {
+  const router = useRouter();
+
   return (
-    <div style={{ padding: 40, textAlign: "center", paddingTop: 120 }}>
-      <h1 className="text-2xl mb-4">Plata a fost anulată ❌</h1>
-      <p>Rezervarea nu a fost confirmată.</p>
-      <p>Dacă vrei, poți încerca din nou.</p>
-      <a
-        href="/"
+    <div style={{ padding: "40px", textAlign: "center", paddingTop: "120px" }}>
+      <h1 style={{ fontSize: "24px", marginBottom: "20px" }}>
+        Plata a fost anulată ❌
+      </h1>
+      <p>Dacă vrei, poți încerca din nou sau reveni pe homepage.</p>
+      <button
+        onClick={() => router.push("/")}
         style={{
-          display: "inline-block",
-          marginTop: 20,
+          marginTop: "20px",
           padding: "10px 20px",
-          border: "1px solid #8",
-          borderRadius: 8,
-          textDecoration: "none",
+          backgroundColor: "#4f46e5",
+          color: "white",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer",
+          fontSize: "16px",
         }}
       >
-        Înapoi la prima pagină
-      </a>
+        Înapoi la homepage
+      </button>
     </div>
   );
 }
