@@ -89,18 +89,26 @@ export const config = {
   },
 };
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY_TEST);
+const stripeSecretKey =
+  process.env.NODE_ENV === "production"
+    ? process.env.STRIPE_SECRET_KEY
+    : process.env.STRIPE_SECRET_KEY_TEST;
+
+const webhookSecret =
+  process.env.NODE_ENV === "production"
+    ? process.env.STRIPE_WEBHOOK_SECRET
+    : process.env.STRIPE_WEBHOOK_SECRET_TEST;
 
 export async function POST(req) {
+  const stripe = new Stripe(stripeSecretKey, {
+    apiVersion: "2025-11-17.clover",
+  });
+
   try {
     const buf = Buffer.from(await req.arrayBuffer());
     const sig = req.headers.get("stripe-signature");
 
-    const event = stripe.webhooks.constructEvent(
-      buf,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET_TEST
-    );
+    const event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
     const session = event.data.object;
     console.log("🎯 EVENT DATA:", event.data.object);
     console.log("🎯 METADATA:", session.metadata);
