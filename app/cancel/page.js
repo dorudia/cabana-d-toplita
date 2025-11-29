@@ -5,7 +5,7 @@ export default function CancelPage() {
   const router = useRouter();
 
   return (
-    <div style={{ padding: "40px", textAlign: "center", paddingTop: "120px" }}>
+    <div className="h-[calc(100vh-280px)] mt-36 text-center">
       <h1 style={{ fontSize: "24px", marginBottom: "20px" }}>
         Plata a fost anulată ❌
       </h1>
