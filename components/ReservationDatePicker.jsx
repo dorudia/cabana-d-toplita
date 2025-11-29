@@ -209,21 +209,21 @@ function ReservationDatePicker({ isAdmin }) {
           className="text-xl flex flex-wrap items-center justify-center h-auto gap-2 px-2 py-2 md:px-4 md:py-4 my-2 border font-sans"
           style={
             isAdmin && {
-              padding: "8px 16px",
+              padding: "2px 16px",
               fontSize: "16px",
-              margin: "0 auto",
+              // margin: "0 auto",
             }
           }
         >
-          {!isAdmin ? "Verifica Disponibilitate" : "Adaugare Rezervare"}
+          {!isAdmin ? "Verifica Disponibilitate" : "Adauga Rezervare"}
         </Button>
       </DialogTrigger>
 
       <DialogContent className="w-[95%] md:w-[700px] p-8 sm:p-12 bg-secondary/90 rounded-[12px] outline outline-1 outline-offset-[-8px] outline-primary relative flex flex-col items-center !max-h-[90%] !overflow-y-scroll -webkit-overflow-scrolling-touch">
         <DialogHeader>
           <DialogTitle className="text-2xl mb-4">Selectează datele</DialogTitle>
-          <DialogDescription>
-            selecteaza data sosirii si plecarii
+          <DialogDescription className="text-lg text-slate-700 dark:text-slate-200">
+            Selecteaza data sosirii si plecarii!
           </DialogDescription>
         </DialogHeader>
 

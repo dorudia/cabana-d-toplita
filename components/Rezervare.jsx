@@ -31,19 +31,13 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
   };
 
   const handleDeleteReservation = async () => {
-    if (
-      confirm(
-        `sigur vrei sa stergi rezervarea ${format(rezervare.dataSosirii, "dd-MM-yyyy")}/${format(rezervare.dataPlecarii, "dd-MM-yyyy")} ? ${rezervare.dataPlecarii} `
-      )
-    ) {
-      const response = await deleteReservation(rezervare._id);
-      getAllReservations();
-      toast.success(response, {
-        duration: 6000,
-        variant: "default",
-      });
-      getAllReservations();
-    }
+    const response = await deleteReservation(rezervare._id);
+    getAllReservations();
+    toast.success(response, {
+      duration: 6000,
+      variant: "default",
+    });
+    getAllReservations();
   };
 
   return (
@@ -122,14 +116,43 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Button
-        onClick={handleDeleteReservation}
-        size="sm"
-        variant="destructive"
-        className="!ml-auto"
-      >
-        <Trash2 />
-      </Button>
+
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button size="sm" variant="destructive" className="!ml-auto">
+            <Trash2 />
+          </Button>
+        </DialogTrigger>
+        <DialogContent
+          className="max-w-[90%]  md:max-w-[50%] w-full font-geist"
+          aria-describedby="descriere-dialog"
+        >
+          <DialogHeader>
+            <DialogTitle className="mb-2 font-geist">
+              Esti sigur ca vrei sa stergi rezervarea?
+            </DialogTitle>
+            <DialogDescription>Confirmare stergere</DialogDescription>
+          </DialogHeader>
+          <Button
+            className="font-bold px-8 capitalize bg-red-700 hover:bg-red-800 text-white w-fit mx-auto"
+            onClick={handleDeleteReservation}
+          >
+            Sterge
+          </Button>
+          <DialogFooter className="sm:justify-start">
+            <DialogClose asChild>
+              <Button
+                ref={closeBtnRef}
+                type="button"
+                variant="secondary"
+                className="!py-1 !px-4 border hover:border hover:border-primary/30 absolute bottom-1 right-1"
+              >
+                Close
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

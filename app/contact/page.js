@@ -47,8 +47,7 @@ export default function ContactPage() {
   };
 
   return (
-    <section className="max-w-5xl mx-auto px-4 py-16 text-gray-200 mt-16">
-      {/* CARDURI */}
+    <section className="max-w-5xl mx-auto px-4 py-16 text-gray-200 mt-6 md:mt-24">
       <div className="grid md:grid-cols-3 gap-6 mb-12">
         <div className="bg-slate-200 dark:bg-slate-800 shadow-lg rounded-lg p-6">
           <div className="flex items-center mb-2">
@@ -62,7 +61,6 @@ export default function ContactPage() {
             Toplița – Cabana D
           </p>
         </div>
-
         <div className="bg-slate-200 dark:bg-slate-800 shadow-lg rounded-lg p-6">
           <div className="flex items-center mb-2">
             <Phone className="w-6 h-6 text-primary mr-3" />

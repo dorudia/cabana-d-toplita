@@ -13,6 +13,7 @@ import Providers from "../components/Provider";
 import { getSettings } from "./lib/actions";
 import { Toaster } from "../@/components/ui/sonner";
 import { auth } from "./lib/auth";
+import Footer from "../components/Footer";
 
 const greatVibes = Great_Vibes({
   variable: "--font-great-vibes",
@@ -59,7 +60,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${greatVibes.variable} ${bokor.variable} ${grechen.variable} ${lora.variable} ${geistMono.variable} antialiased dark:bg-slate-900 `}
+        className={`${geistSans.variable} ${greatVibes.variable} ${bokor.variable} ${grechen.variable} ${lora.variable} ${geistMono.variable} antialiased dark:bg-slate-900`}
       >
         <ThemeProvider
           attribute="class"
@@ -68,11 +69,14 @@ export default async function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <Providers>
+            {/* <div className="min-h-screen"> */}
             <Navigation session={session} />
             <main className="mx-auto dark:bg:slate-900 text-slate-foreground font-geist">
               {children}
             </main>
             <Toaster />
+            <Footer />
+            {/* </div> */}
           </Providers>
         </ThemeProvider>
       </body>

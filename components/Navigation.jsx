@@ -3,13 +3,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { ModeToggle } from "./ModeToggle";
 import SignOutButton from "./SignOutButton";
-
 import HamburgerMenu from "./HamburgerMenu";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import LogoCabana from "./LogoCabana";
+import { usePathname } from "next/navigation";
 
 const Navigation = ({ session }) => {
   const [isOpen, setIsOpen] = useState(false);
-  // console.log("session form navbar 12:", session?.user);
+  const pathname = usePathname();
+  console.log("🔍pathname:", pathname);
+
+  const isLinkActive = (href) => {
+    if (!pathname) return false;
+    // pentru homepage exact "/"
+    if (href === "/") return pathname === "/";
+    // pentru restul, exact match fără query/hash
+    return pathname.split(/[?#]/)[0] === href;
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -19,38 +30,46 @@ const Navigation = ({ session }) => {
     }
   }, [isOpen]);
 
-  // if (isOpen) {
-  //   document.body.style.overflow = "hidden";
-  // } else {
-  //   document.body.style.overflow = "auto";
-  // }
-
   let navUlClasses = isOpen
-    ? "flex flex-col absolute top-[77px] left-0 w-[100%] pt-16 bg-secondary h-screen items-center justify-top space-y-4 mx-auto font-geist text-xl "
-    : "hidden md:flex items-center justify-between  space-x-4 mx-auto font-geist text-xl ";
+    ? "flex flex-col absolute top-[58px] left-0 w-[100%] pt-16 bg-secondary h-screen items-center justify-top space-y-4 mx-auto font-geist text-xl "
+    : "hidden md:flex items-center justify-between  space-x-7 mx-auto text-2xl ";
   console.log("navUlClasses", navUlClasses);
 
+  let linkClasses =
+    "px-2 py-1 rounded-md border  hover:border hover:border-primary/40";
+
   return (
-    <div className="p-2 py-6 dark:bg-slate-900/80 text-slate-900-foreground border-b bg-slate-200/70 backdrop-blur-sm border-slate-400/20 fixed tracking-wider top-0 w-full z-20">
+    <div className="p-2 py-1 dark:bg-slate-900/40 text-slate-900-foreground bg-slate-200/70 backdrop-blur-sm border-slate-400/20 fixed tracking-wider top-0 w-full z-20">
       <nav className="flex items-center justify-between max-w-7xl mx-auto font-geist text-xl ">
         <Link
-          className="font-greatVibes font-bold text-xl md:text-2xl text-center  cursor-pointer"
-          onClick={() => setIsOpen(false)}
           href="/"
+          className={`${linkClasses} ${isLinkActive("/") ? " border-1 border-primary/40" : "border-transparent"}`}
         >
-          Cabana D
+          <LogoCabana />
         </Link>
-        <ul className={navUlClasses}>
-          <li className="flex md:hidden" onClick={() => setIsOpen(false)}>
+        <ul className={navUlClasses + "font-serif italic"}>
+          <li
+            className={linkClasses + "flex md:hidden"}
+            onClick={() => setIsOpen(false)}
+          >
             <Link href="/">Home</Link>
           </li>
-          <li onClick={() => setIsOpen(false)}>
-            <Link href="/gallery">Gallery</Link>
+          <li
+            onClick={() => setIsOpen(false)}
+            className={`${linkClasses} ${isLinkActive("/gallery") ? " border-1 border-primary/40" : "border-transparent"}`}
+          >
+            <Link href="/gallery">Galerie Foto</Link>
           </li>
-          <li onClick={() => setIsOpen(false)}>
-            <Link href="/about">About</Link>
+          <li
+            onClick={() => setIsOpen(false)}
+            className={`${linkClasses} ${isLinkActive("/about") ? " border-1 border-primary/40" : "border-transparent"}`}
+          >
+            <Link href="/about">Despre</Link>
           </li>
-          <li onClick={() => setIsOpen(false)}>
+          <li
+            onClick={() => setIsOpen(false)}
+            className={`${linkClasses} ${isLinkActive("/contact") ? " border-1 border-primary/40" : "border-transparent"}`}
+          >
             <Link href="/contact">Contact</Link>
           </li>
           {/* {session?.user && (
@@ -60,12 +79,15 @@ const Navigation = ({ session }) => {
           )} */}
           {(session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL_1 ||
             session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL_2) && (
-            <li onClick={() => setIsOpen(false)}>
-              <Link href="/rezervari/toate-rezervarile">Rezervari</Link>
+            <li
+              onClick={() => setIsOpen(false)}
+              className={`${linkClasses} ${isLinkActive("/admin") ? " border-1 border-primary/40" : "border-transparent"}`}
+            >
+              <Link href="/admin">Admin</Link>
             </li>
           )}
         </ul>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 font-mono lg:min-w-[225px] justify-end">
           {session?.user ? (
             <>
               {session?.user?.image ? (
@@ -89,7 +111,6 @@ const Navigation = ({ session }) => {
                   </span>
                 </Link>
               )}
-              <SignOutButton />
             </>
           ) : (
             <Link href="/login?mode=login">Login</Link>

@@ -27,7 +27,7 @@ export default function AboutPage() {
   }, [pause, index]);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10 mt-24">
+    <div className="max-w-5xl mx-auto px-4 py-10 mt-28">
       {/* Title */}
       <motion.h1
         initial={{ opacity: 0, y: 30 }}
@@ -76,9 +76,12 @@ export default function AboutPage() {
           >
             <ChevronRight />
           </button>
+          <div className="hidden md:flex w-fit absolute md:top-2 md:right-3 z-9999">
+            <ReservationDayPickeer />
+          </div>
         </div>
       </motion.div>
-      <div className="w-fit mx-auto mt-6">
+      <div className="md:hidden w-fit  mx-auto mt-6 shadow-2xl cursor-pointer">
         <ReservationDayPickeer />
       </div>
     </div>
