@@ -3,7 +3,7 @@ import LogoCabana from "./LogoCabana";
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-800 text-slate-200 py-6 font-geist ">
+    <footer className="bg-slate-800 text-slate-200 py-6 font-geist mt-4 ">
       <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
         {/* Logo / Branding */}
         <div className="mb-4 md:mb-0 lg:min-w-[200px]">
@@ -16,7 +16,7 @@ export default function Footer() {
         </div>
 
         {/* Links */}
-        <div className="flex space-x-6 mb-4 md:mb-0">
+        <div className="flex space-x-3 space-x-6 mb-4 md:mb-0">
           <Link href="/" className="hover:opacity-70 transition">
             Home
           </Link>

@@ -1,24 +1,32 @@
-"use client";
-
-import { useState, useRef } from "react";
+// import { useState, useRef } from "react";
 import MapEmbed from "../../components/Map";
 import { Mail, Phone, MapPin } from "lucide-react";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from "../../@/components/ui/dialog";
-import { Button } from "../../@/components/ui/button";
+import ContactPageForm from "@/components/ContactPageForm";
+
+export const metadata = {
+  title: "Contact Cabana D Toplița",
+  description:
+    "Contactează Cabana D Toplița pentru rezervări sau informații. Telefon, email și hartă.",
+  openGraph: {
+    title: "Contact Cabana D Toplița",
+    description:
+      "Contactează Cabana D Toplița pentru rezervări sau informații. Telefon, email și hartă.",
+    url: "https://cabana-d.ro/contact",
+    siteName: "Cabana D Toplița",
+    images: [
+      {
+        url: "/cabana-dark-1.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Cabana D Toplița",
+      },
+    ],
+    locale: "ro_RO",
+    type: "website",
+  },
+};
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [successMessage, setSuccessMessage] = useState("");
-  const closeBtnRef = useRef();
-
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -88,78 +96,7 @@ export default function ContactPage() {
       </div>
 
       {/* FORMULAR */}
-      <form
-        onSubmit={handleSubmit}
-        className="bg-slate-200 dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-gray-700 space-y-4"
-      >
-        <div>
-          <label className="text-slate-800 dark:text-slate-50 block text-sm font-medium mb-1">
-            Nume
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
-            className="w-full p-2 text-slate-800 dark:text-slate-50 dark:bg-slate-900 border border-gray-700 rounded focus:outline-none focus:border-green-500"
-          />
-        </div>
-
-        <div>
-          <label className="text-slate-800 dark:text-slate-50 block text-sm font-medium mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-            className="w-full p-2 text-slate-800 dark:text-slate-50 bg-slate-100 dark:bg-slate-900 border border-gray-700 rounded focus:outline-none focus:border-green-500"
-          />
-        </div>
-
-        <div>
-          <label className="text-slate-800 dark:text-slate-50 block text-sm font-medium mb-1">
-            Mesaj
-          </label>
-          <textarea
-            name="message"
-            value={form.message}
-            onChange={handleChange}
-            rows={4}
-            required
-            className="w-full p-2 text-slate-800 dark:text-slate-50 bg-slate-100 dark:bg-slate-900 border border-gray-700 rounded focus:outline-none focus:border-green-500"
-          />
-        </div>
-
-        {/* Trigger dialog pentru mesaj de succes */}
-        <Dialog>
-          <DialogTrigger asChild>
-            <button
-              type="submit"
-              className="text-slate-50 bg-slate-600 hover:bg-slate-700 cursor-pointer transition px-4 py-2 rounded-md w-full"
-            >
-              TRIMITE MESAJ
-            </button>
-          </DialogTrigger>
-
-          {successMessage && (
-            <DialogContent className="w-[90%] md:w-fit flex flex-col items-center md:!px-16 md:!py-8 !px-6 !py-4">
-              <DialogHeader>
-                <DialogTitle>Mesaj trimis!</DialogTitle>
-              </DialogHeader>
-              <p>{successMessage}</p>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button ref={closeBtnRef}>Închide</Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          )}
-        </Dialog>
-      </form>
+      <ContactPageForm />
 
       <div className="mt-10">
         <MapEmbed />

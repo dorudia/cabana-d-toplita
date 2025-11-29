@@ -1,88 +1,45 @@
-"use client";
-import { motion } from "framer-motion";
-import cabanaDark from "../../public/cabana-dark-1.jpg";
-import Image from "next/image";
-import { useState, useEffect } from "react";
-import { set } from "mongoose";
-import ReservationDayPickeer from "../../components/ReservationDatePicker";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import AboutSlider from "@/components/AboutSlider";
+import ReservationDayPicker from "@/components/ReservationDatePicker";
 
-const images = Array.from(
-  { length: 20 },
-  (_, i) => `/slide-site/cabana-${i + 1}.jpeg`
-);
+export const metadata = {
+  title: "Despre Cabana D Toplița",
+  description:
+    "Află povestea Cabanei D, refugiu perfect în munți, pentru relaxare și familie.",
+  openGraph: {
+    title: "Despre Cabana D Toplița",
+    description:
+      "Află povestea Cabanei D, refugiu perfect în munți, pentru relaxare și familie.",
+    url: "https://cabana-d.ro/about",
+    siteName: "Cabana D Toplița",
+    images: [
+      {
+        url: "/cabana-dark-1.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Cabana D Toplița",
+      },
+    ],
+    locale: "ro_RO",
+    type: "website",
+  },
+};
 
 export default function AboutPage() {
-  const [index, setIndex] = useState(0);
-  const [pause, setPause] = useState(false); // oprește autoplay la hover
-
-  const next = () => setIndex((prev) => (prev + 1) % images.length);
-  const prev = () =>
-    setIndex((prev) => (prev - 1 + images.length) % images.length);
-
-  useEffect(() => {
-    if (pause) return;
-    const timer = setInterval(next, 5000);
-    return () => clearInterval(timer);
-  }, [pause, index]);
-
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10 mt-28">
-      {/* Title */}
-      <motion.h1
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-5xl md:text-5xl font-great-vibes text-center mb-6 font-greatVibes"
-      >
+    <div className="flex-1 max-w-5xl mx-auto px-4 py-10 mt-16 md:mt-28">
+      <h1 className="text-5xl md:text-5xl font-greatVibes text-center mb-6">
         Povestea Cabanei D
-      </motion.h1>
-
-      {/* Image + Text */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="grid gap-6 items-center p-1"
-      >
-        <p className="leading-relaxed mx-auto text-center font-greatVibes text-2xl md:text-4xl max-w-[90%]">
-          Departe de zgomotul orașelor, cabana noastră oferă un refugiu perfect
-          pentru familii, grupuri sau oricine are nevoie de relaxare si să
-          respire aer curat.
-        </p>
-        <div className="relative w-full aspect-[16/9] overflow-hidden rounded-xl shadow-lg">
-          <motion.div
-            key={index}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 2 }} // 👉 tranzitie smooth
-          >
-            <Image
-              src={images[index]}
-              alt="Cabana D"
-              fill
-              className="object-cover"
-              priority
-            />
-          </motion.div>
-
-          <button
-            onClick={prev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 text-stone-300 px-3 py-1 rounded-full aspect-square"
-          >
-            <ChevronLeft />
-          </button>
-          <button
-            onClick={next}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 text-stone-300 px-3 py-1 rounded-full aspect-square"
-          >
-            <ChevronRight />
-          </button>
-          <div className="hidden md:flex w-fit absolute md:top-2 md:right-3 z-9999">
-            <ReservationDayPickeer />
-          </div>
+      </h1>
+      <p className="leading-relaxed mb-6 mx-auto text-center font-greatVibes text-2xl md:text-4xl max-w-[90%]">
+        Departe de zgomotul orașelor, cabana noastră oferă un refugiu perfect
+        pentru familii, grupuri sau oricine are nevoie de relaxare si să respire
+        aer curat.
+      </p>
+      <div className="relative">
+        <AboutSlider />
+        <div className="mt-8 md:absolute -top-6 right-2 z-9999 mx-auto w-fit ">
+          <ReservationDayPicker />
         </div>
-      </motion.div>
-      <div className="md:hidden w-fit  mx-auto mt-6 shadow-2xl cursor-pointer">
-        <ReservationDayPickeer />
       </div>
     </div>
   );
