@@ -1,5 +1,6 @@
 import AboutSlider from "@/components/AboutSlider";
 import ReservationDayPicker from "@/components/ReservationDatePicker";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "Despre Cabana D Toplița",
@@ -35,12 +36,14 @@ export default function AboutPage() {
         pentru familii, grupuri sau oricine are nevoie de relaxare si să respire
         aer curat.
       </p>
-      <div className="relative">
-        <AboutSlider />
-        <div className="mt-8 md:absolute -top-6 right-2 z-9999 mx-auto w-fit ">
-          <ReservationDayPicker />
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="relative">
+          <AboutSlider />
+          <div className="mt-8 md:absolute -top-6 right-2 z-9999 mx-auto w-fit ">
+            <ReservationDayPicker />
+          </div>
         </div>
-      </div>
+      </Suspense>
     </div>
   );
 }

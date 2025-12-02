@@ -140,6 +140,7 @@ import {
   TvMinimal,
   Wifi,
 } from "lucide-react";
+import { Suspense } from "react";
 
 const facilitys = [
   {
@@ -178,8 +179,9 @@ export default function Home() {
   return (
     <>
       {/* HERO 1:1 EXACT */}
-      <CabanaHero />
-
+      <Suspense fallback={<div>Loading...</div>}>
+        <CabanaHero />
+      </Suspense>
       {/* FACILITIES – EXACT styling păstrat */}
       <section className="mx-auto flex flex-col items-center justify-between h-full relative z-0 bg-stone-9500 py-32 min-h-[500px] ">
         <div
