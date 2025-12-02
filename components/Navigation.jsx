@@ -8,11 +8,12 @@ import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import LogoCabana from "./LogoCabana";
 import { usePathname } from "next/navigation";
+import { UserIcon } from "lucide-react";
 
 const Navigation = ({ session }) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  console.log("🔍pathname:", pathname);
+  console.log("🔍user:", session);
 
   const isLinkActive = (href) => {
     if (!pathname) return false;
@@ -35,8 +36,7 @@ const Navigation = ({ session }) => {
     : "hidden md:flex items-center justify-between  space-x-7 mx-auto text-2xl ";
   console.log("navUlClasses", navUlClasses);
 
-  let linkClasses =
-    "px-2 py-1 rounded-md border  hover:border hover:border-primary/40";
+  let linkClasses = "rounded-md border  hover:border hover:border-primary/40";
 
   return (
     <div className="p-2 py-1 dark:bg-slate-900/40 text-slate-900-foreground bg-slate-200/70 backdrop-blur-sm border-slate-400/20 fixed tracking-wider top-0 w-full z-20">
@@ -52,25 +52,33 @@ const Navigation = ({ session }) => {
             className={linkClasses + "flex md:hidden"}
             onClick={() => setIsOpen(false)}
           >
-            <Link href="/">Home</Link>
+            <Link className="px-2 py-1" href="/">
+              Home
+            </Link>
           </li>
           <li
             onClick={() => setIsOpen(false)}
             className={`${linkClasses} ${isLinkActive("/gallery") ? " border-1 border-primary/40" : "border-transparent"}`}
           >
-            <Link href="/gallery">Galerie Foto</Link>
+            <Link className="px-2 py-1" href="/gallery">
+              Galerie Foto
+            </Link>
           </li>
           <li
             onClick={() => setIsOpen(false)}
             className={`${linkClasses} ${isLinkActive("/about") ? " border-1 border-primary/40" : "border-transparent"}`}
           >
-            <Link href="/about">Despre</Link>
+            <Link className="px-2 py-1" href="/about">
+              Despre
+            </Link>
           </li>
           <li
             onClick={() => setIsOpen(false)}
             className={`${linkClasses} ${isLinkActive("/contact") ? " border-1 border-primary/40" : "border-transparent"}`}
           >
-            <Link href="/contact">Contact</Link>
+            <Link className="px-2 py-1" href="/contact">
+              Contact
+            </Link>
           </li>
           {/* {session?.user && (
             <li onClick={() => setIsOpen(false)}>
@@ -83,7 +91,9 @@ const Navigation = ({ session }) => {
               onClick={() => setIsOpen(false)}
               className={`${linkClasses} ${isLinkActive("/admin") ? " border-1 border-primary/40" : "border-transparent"}`}
             >
-              <Link href="/admin">Admin</Link>
+              <Link className="px-2 py-1" href="/admin">
+                Admin
+              </Link>
             </li>
           )}
         </ul>
@@ -104,10 +114,7 @@ const Navigation = ({ session }) => {
               ) : (
                 <Link href="/account">
                   <span className="text-[10px] w-6 aspect-square rounded-full text-xs grid items-center justify-center bg-primary/20 p-1">
-                    {session.user?.name
-                      .split(" ")
-                      .map((char) => char.slice(0, 1).toUpperCase())
-                      .slice(0, 2)}
+                    <UserIcon size={16} className="text-primary/70" />
                   </span>
                 </Link>
               )}

@@ -1,13 +1,15 @@
 "use client";
 
 import {
-  addNewUserToDB,
-  findUserInDB,
   sendEmail,
   signInWithCredentials,
   signInWithFacebook,
   signInWithGoogle,
 } from "../app/lib/actions";
+import { signIn } from "next-auth/react";
+
+import { addNewUserToDB, findUserInDB, checkUserPassword } from "@/lib/actions";
+
 import { Button } from "../components/ui/button";
 import {
   Card,
@@ -20,14 +22,19 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { cn } from "../lib/utils";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 // import { signIn } from "@/app/lib/auth";‚
+
+function isValidEmail(email) {
+  // validare simplă, verifică că are format corect
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
 export function LoginForm({ className, ...props }) {
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
-  // const router = useRouter();  // nu merge
+  const router = useRouter(); // nu merge
   // const { data: session } = useSession();
 
   const [error, setError] = useState(null);
@@ -42,49 +49,70 @@ export function LoginForm({ className, ...props }) {
   //   }
   // }, [session, searchUserInDB]);
 
-  async function handleLogin(event) {
-    event.preventDefault();
-    let checkPasswordMatch = true;
-    const formData = new FormData(event.target);
-    // console.log("login clicked", checkPasswordMatch);
+  // ----------------------------
+  // LOGIN
+  // ----------------------------
+  async function handleLogin(e) {
+    e.preventDefault();
+    setError(null);
+
+    const form = new FormData(e.target);
+    const email = form.get("email");
+    const password = form.get("password");
 
     try {
-      const user = await findUserInDB(formData, checkPasswordMatch);
-      if (user) {
-        await signInWithCredentials(user.name, user.email, user.password);
+      const user = await checkUserPassword(email, password);
+      if (!user) {
+        setError("Incorrect email or password");
+        return;
       }
-    } catch (error) {
-      setError(error.message);
+
+      // login NextAuth cu redirect: true
+      await signIn("credentials", {
+        redirect: true,
+        email,
+        password,
+        callbackUrl: "/",
+      });
+    } catch (err) {
+      setError(err.message || "Login failed");
     }
   }
 
-  async function handleSignUp(event) {
-    event.preventDefault();
-    let checkPasswordMatch = false;
-    const formData = new FormData(event.target);
-    const name = formData.get("name");
-    const email = formData.get("email");
-    const password = formData.get("password");
+  async function handleSignUp(e) {
+    e.preventDefault();
+    setError(null);
+
+    const form = new FormData(e.target);
+    const name = form.get("name");
+    const email = form.get("email");
+    const password = form.get("password");
 
     try {
-      const user = await findUserInDB(formData, checkPasswordMatch);
+      // 1️⃣ Creează user
+      const user = await addNewUserToDB(name, email, password);
 
-      if (user && user.email === email) {
-        setError("User already exists");
-      } else {
-        await signInWithCredentials(name, email, password);
-        await addNewUserToDB(name, email, password);
+      // 2️⃣ Login automat cu NextAuth
+      const res = await signIn("credentials", {
+        redirect: false,
+        email,
+        password, // parola originală, NextAuth se ocupă de comparație cu hash
+      });
 
-        await sendEmail({
-          name,
-          email,
-          password,
-        });
-        console.log("email sent");
+      if (res?.error) {
+        setError(res.error || "Login after signup failed");
+        return;
       }
-    } catch (error) {
-      console.log("error", error);
-      setError(error.message);
+
+      // 3️⃣ Redirect homepage
+      await signIn("credentials", {
+        redirect: true, // forțează redirect + setare cookie
+        email,
+        password,
+        callbackUrl: "/", // unde vrei să fie redirect după login
+      });
+    } catch (err) {
+      setError(err.message);
     }
   }
 
@@ -172,12 +200,12 @@ export function LoginForm({ className, ...props }) {
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Your Password</Label>
-                    <a
+                    {/* <a
                       href="#"
                       className="ml-auto text-sm underline-offset-4 hover:underline"
                     >
                       Forgot your password?
-                    </a>
+                    </a> */}
                   </div>
                   <Input
                     id="password"
@@ -186,15 +214,16 @@ export function LoginForm({ className, ...props }) {
                     required
                   />
                 </div>
+                {error && (
+                  <p className="text-center p-2 text-sm bg-destructive/50">
+                    {error}
+                  </p>
+                )}
                 <Button type="submit" className="w-full">
                   {mode === "signup" ? "Sign up" : "Login"}
                 </Button>
               </div>
-              {error && (
-                <p className="text-center p-2 text-sm bg-destructive text-destructive-foreground">
-                  {error}
-                </p>
-              )}
+
               <div className="text-center text-sm">
                 {mode === "login" ? "Don't have an account? " : ""}
                 <a
@@ -212,10 +241,10 @@ export function LoginForm({ className, ...props }) {
           </form>
         </CardContent>
       </Card>
-      <div className="text-balance text-center text-md text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
+      {/* <div className="text-balance text-center text-md text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
-      </div>
+      </div> */}
     </div>
   );
 }

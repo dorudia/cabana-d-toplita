@@ -271,10 +271,10 @@ function ReservationDatePicker({ isAdmin }) {
                     ref={copiiRef}
                     className="p-2 border border-primary rounded-md w-full appearance-none"
                   >
-                    {Array(6)
+                    {Array(7)
                       .fill()
                       .map((_, i) => (
-                        <option key={i}>{i + 1}</option>
+                        <option key={i}>{i}</option>
                       ))}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">

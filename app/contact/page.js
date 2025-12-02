@@ -90,7 +90,7 @@ export default function ContactPage() {
             </p>
           </div>
           <p className="text-slate-900 dark:text-slate-100 text-sm break-all">
-            cabana@example.com
+            dorudia@gmail.com
           </p>
         </div>
       </div>
