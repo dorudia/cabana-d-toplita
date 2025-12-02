@@ -181,9 +181,9 @@ export default function Home() {
       <CabanaHero />
 
       {/* FACILITIES – EXACT styling păstrat */}
-      <section className="mx-auto flex flex-col items-center justify-between h-full relative z-0 bg-stone-9500 py-32 ">
+      <section className="mx-auto flex flex-col items-center justify-between h-full relative z-0 bg-stone-9500 py-32 min-h-[500px] ">
         <div
-          className="wrapper-lines absolute top-0 left-0 w-full h-full z-[2]"
+          className="wrapper-lines absolute top-0 left-0 w-full h-full z-[2] min-h-[500px]"
           style={{
             background: `linear-gradient(to right, #ffffff15 1px, transparent 1px),
           linear-gradient(to bottom, #00000015 1px, transparent 1px)`,

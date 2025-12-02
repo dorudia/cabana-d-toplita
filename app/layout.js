@@ -25,27 +25,32 @@ const grechen = Grechen_Fuemen({
   variable: "--font-grechen",
   subsets: ["latin"],
   weight: "400",
+  display: "swap",
 });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const bokor = Bokor({
   variable: "--font-bokor",
   subsets: ["latin"],
   weight: "400",
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const lora = Lora({
   variable: "--font-lora",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata = {

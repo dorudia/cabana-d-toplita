@@ -134,6 +134,7 @@ export default function GalleryClient({ images }) {
               placeholder="blur"
               blurDataURL={src + "?w=10&blur=200"} // tiny blur real -> gri uniform
               className="rounded-lg object-cover"
+              quality={75}
             />
           </div>
         ))}
