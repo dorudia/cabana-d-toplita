@@ -3,14 +3,14 @@ import React from "react";
 
 const LogoCabana = () => {
   return (
-    <div className=" flex items-center rounded-2xl gap-1 font-greatVibes font-bold text-xl md:text-xl text-center">
+    <div className=" flex items-center rounded-2xl gap-1 font-greatVibes font-bold text-xl md:text-xl text-center py-1 px-2">
       <img
         src="./LOGO_CASA_D.svg"
         alt="Cabana D"
-        className={`w-10 h-10 md:w-28 md:h-28 dark:invert-[100%]`}
+        className={`w-10 h-10 md:w-20 md:h-20 dark:invert-[100%]`}
         // style={{ filter: theme === "dark" && "invert(100%)" }}
       />
-      <div className="grid items-center md:-ml-[18px] pr-2 md:pr-4 md:text-2xl">
+      <div className="grid items-center md:-ml-[14px]  md:text-2xl">
         <p className="pt-[8px]">Cabana D</p>
         <p className="hidden md:block">Toplita</p>
       </div>

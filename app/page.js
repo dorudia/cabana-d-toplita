@@ -201,9 +201,9 @@ export default function Home() {
                 className="flex flex-col items-center justify-center p-8 rounded-lg shadow-[0_0_22px] shadow-primary/30 border border-primary/20 bg-gradient-to-tr from-secondary/70 via-transparent to-primary/20"
               >
                 {facility.icon}
-                <h3 className="text-3xl font-semibold my-4 font-geist">
+                <h2 className="text-3xl font-semibold my-4 font-geist">
                   {facility.name}
-                </h3>
+                </h2>
                 <p className="text-lg text-center">{facility.description}</p>
               </li>
             ))}
