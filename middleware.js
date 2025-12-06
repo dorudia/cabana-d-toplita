@@ -2,25 +2,28 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 // Hardcoded admin emails pentru edge runtime
-const allowedEmails = [
-  "dorudia@gmail.com",
-  "elamoldovan12@gmail.com",
-];
+const allowedEmails = ["dorudia@gmail.com", "elamoldovan12@gmail.com"];
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
-  
+
   // Debug NEXTAUTH_SECRET și cookie
   console.log("=== MIDDLEWARE DEBUG ===");
   console.log("Middleware - Path:", pathname);
-  console.log("Middleware - NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
+  console.log(
+    "Middleware - NEXTAUTH_SECRET exists:",
+    !!process.env.NEXTAUTH_SECRET
+  );
   console.log("Middleware - NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
-  console.log("Middleware - Cookies:", req.cookies.getAll().map(c => c.name));
-  
-  const token = await getToken({ 
-    req, 
+  console.log(
+    "Middleware - Cookies:",
+    req.cookies.getAll().map((c) => c.name)
+  );
+
+  const token = await getToken({
+    req,
     secret: process.env.NEXTAUTH_SECRET,
-    secureCookie: process.env.NODE_ENV === "production"
+    secureCookie: process.env.NODE_ENV === "production",
   });
 
   console.log("Middleware - Token exists:", !!token);
@@ -35,10 +38,19 @@ export async function middleware(req) {
 
   // Protejează rutele admin
   if (pathname.startsWith("/admin") || pathname.startsWith("/rezervari")) {
-    if (!token || !allowedEmails.includes(token.email)) {
+    if (!token) {
+      // Nu e logat deloc -> redirect la login
       const url = req.nextUrl.clone();
       url.pathname = "/login";
       return NextResponse.redirect(url);
+    }
+
+    if (!allowedEmails.includes(token.email)) {
+      // E logat dar nu e admin -> lasă să ajungă la pagină (pagina va afișa mesaj)
+      // Nu facem redirect, doar setăm un header
+      const response = NextResponse.next();
+      response.headers.set("x-unauthorized", "true");
+      return response;
     }
   }
 

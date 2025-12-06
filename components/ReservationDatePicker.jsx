@@ -180,7 +180,7 @@ function ReservationDatePicker({ isAdmin }) {
     const pretTotal = Number(innoptari * pretNoapte);
 
     const reservationData = {
-      userName: session.user.name,
+      userName: session.user.name || session.user.email.split("@")[0] || "User",
       userEmail: session.user.email,
       dataSosirii: format(range.from, "yyyy.MM.dd"),
       dataPlecarii: format(range.to, "yyyy.MM.dd"),

@@ -54,15 +54,18 @@ const authConfig = {
       // Debug logging
       console.log("JWT Callback - user:", user?.email);
       console.log("JWT Callback - profile:", profile?.email);
-      console.log("JWT Callback - token before:", { email: token.email, name: token.name });
-      
+      console.log("JWT Callback - token before:", {
+        email: token.email,
+        name: token.name,
+      });
+
       // La login inițial, user există
       if (user) {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
       }
-      
+
       // Pentru OAuth providers (Google, Facebook), email vine din profile
       if (profile?.email && !token.email) {
         token.email = profile.email;
@@ -72,17 +75,26 @@ const authConfig = {
         token.provider = account.provider;
       }
 
-      console.log("JWT Callback - token after:", { email: token.email, name: token.name });
+      console.log("JWT Callback - token after:", {
+        email: token.email,
+        name: token.name,
+      });
       return token;
     },
 
     async session({ session, token }) {
-      console.log("Session Callback - token:", { email: token.email, name: token.name });
+      console.log("Session Callback - token:", {
+        email: token.email,
+        name: token.name,
+      });
       session.user.id = token.id;
       session.user.name = token.name; // <<< acum există și pentru Credentials
       session.user.email = token.email;
       session.user.provider = token.provider;
-      console.log("Session Callback - session.user:", { email: session.user.email, name: session.user.name });
+      console.log("Session Callback - session.user:", {
+        email: session.user.email,
+        name: session.user.name,
+      });
       return session;
     },
 
