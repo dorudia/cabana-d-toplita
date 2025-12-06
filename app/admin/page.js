@@ -41,32 +41,6 @@ const Page = () => {
   const isUserAdmin =
     session?.user?.email && allowedEmails.includes(session.user.email);
 
-  // Dacă nu e admin, afișează mesaj
-  if (status === "loading") {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p>Se încarcă...</p>
-      </div>
-    );
-  }
-
-  if (!isUserAdmin && status === "authenticated") {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-4">
-        <div className="text-center max-w-md">
-          <h1 className="text-3xl font-bold mb-4">🚫 Acces interzis</h1>
-          <p className="text-lg mb-6">
-            Nu ai permisiunea de a accesa această pagină. Doar administratorii
-            au acces la această secțiune.
-          </p>
-          <Link href="/">
-            <Button>Înapoi la pagina principală</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   const asyncReservations = async () => {
     setLoading(true);
     await getAllReservations();
@@ -97,6 +71,32 @@ const Page = () => {
       dataPlecarii: new Date(res.dataPlecarii),
     }));
     setReservations(rezervari);
+  }
+
+  // Dacă nu e admin, afișează mesaj
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Se încarcă...</p>
+      </div>
+    );
+  }
+
+  if (!isUserAdmin && status === "authenticated") {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-4">
+        <div className="text-center max-w-md">
+          <h1 className="text-3xl font-bold mb-4">🚫 Acces interzis</h1>
+          <p className="text-lg mb-6">
+            Nu ai permisiunea de a accesa această pagină. Doar administratorii
+            au acces la această secțiune.
+          </p>
+          <Link href="/">
+            <Button>Înapoi la pagina principală</Button>
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   // Filtrare rezervări pentru taburi

@@ -339,7 +339,8 @@ function ReservationDatePicker({ isAdmin }) {
               return;
             }
             const numNights = differenceInDays(range.to, range.from);
-            if (numNights < minNights) {
+            // Admin-ul nu are restricție de minNights
+            if (!isAdmin && numNights < minNights) {
               toast.error(`Sejur minim de ${minNights} nopți.`, {
                 variant: "destructive",
               });

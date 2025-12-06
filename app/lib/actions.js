@@ -189,24 +189,57 @@ export const addNewReservationToDB = async (rezervare) => {
   return "Rezervare adaugata cu succes";
 };
 
-export async function addObservatii(id, text) {
-  console.log("din-add-observatii:", id, text);
-  const { data, error } = await supabase
-    .from("rezervari")
-    .update({ observatii: text })
-    .eq("id", id) // Înlocuiește 11 cu ID-ul rezervării pe care vrei să o actualizezi
-    .select();
+export async function addObservatii(id, text, userName, pretTotal) {
+  console.log("din-add-observatii:", id, text, userName, pretTotal);
 
-  if (error) {
-    console.log("error", error);
+  const updateData = { observatii: text };
+
+  if (userName !== undefined) {
+    updateData.userName = userName;
   }
-  return "Observatii adaugate cu succes";
+
+  if (pretTotal !== undefined) {
+    updateData.pretTotal = pretTotal;
+  }
+
+  try {
+    const response = await fetch(`/api/reservations/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updateData),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      console.error("Error updating reservation:", result.error);
+      return { error: result.error || "Failed to update reservation" };
+    }
+
+    return { success: true, message: "Observatii adaugate cu succes" };
+  } catch (error) {
+    console.error("Network error:", error);
+    return { error: error.message };
+  }
 }
 
 export async function deleteReservation(id) {
-  const { error } = await supabase.from("rezervari").delete().eq("id", id);
-  if (error) throw new Error("Delete Reservation Error, Something went wrong!");
-  return "Rezervarea stearsa cu succes";
+  try {
+    const response = await fetch(`/api/reservations/${id}`, {
+      method: "DELETE",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Failed to delete reservation");
+    }
+
+    return "Rezervarea stearsa cu succes";
+  } catch (error) {
+    console.error("Error deleting reservation:", error);
+    throw new Error("Delete Reservation Error: " + error.message);
+  }
 }
 
 export async function getGalleryImages() {
