@@ -50,9 +50,10 @@ const authConfig = {
   secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, profile }) {
       // Debug logging
       console.log("JWT Callback - user:", user?.email);
+      console.log("JWT Callback - profile:", profile?.email);
       console.log("JWT Callback - token before:", { email: token.email, name: token.name });
       
       // La login inițial, user există
@@ -60,6 +61,11 @@ const authConfig = {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
+      }
+      
+      // Pentru OAuth providers (Google, Facebook), email vine din profile
+      if (profile?.email && !token.email) {
+        token.email = profile.email;
       }
 
       if (account) {

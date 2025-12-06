@@ -9,11 +9,19 @@ const allowedEmails = [
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
+  
+  // Debug NEXTAUTH_SECRET
+  console.log("Middleware - NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
+  console.log("Middleware - NEXTAUTH_SECRET length:", process.env.NEXTAUTH_SECRET?.length);
+  
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   // Debug logging pentru live
   console.log("Middleware - Path:", pathname);
+  console.log("Middleware - Token exists:", !!token);
+  console.log("Middleware - Token keys:", token ? Object.keys(token) : "no token");
   console.log("Middleware - Token email:", token?.email);
+  console.log("Middleware - Token sub:", token?.sub);
   console.log("Middleware - Is admin:", token?.email ? allowedEmails.includes(token.email) : false);
 
   // Protejează rutele admin
