@@ -76,20 +76,20 @@ const Rezervare = ({ rezervare, getAllReservations }) => {
   return (
     <div
       key={rezervare._id}
-      className="flex flex-wrap items-center font-geist space-x-4 text-lg border border-primary/30 p-2 mx-4 mb-2 capitalize whitespace-nowrap "
+      className="flex flex-wrap items-center font-geist space-x-4 text-sm border border-primary/30 p-2 mx-4 mb-2 capitalize whitespace-nowrap "
     >
       <p className="ml-4">
         creat: {format(new Date(rezervare.createdAt), "dd-MM-yyyy")}
       </p>
       <p>
         sosire:{" "}
-        <span className="font-semibold text-lg border border-primary/30 p-1 rounded-md">
+        <span className="font-semibold text-base border border-primary/30 p-1 rounded-md">
           {format(new Date(rezervare.dataSosirii), "dd-MM-yyyy")}
         </span>
       </p>
       <p>
         plecare:{" "}
-        <span className="font-semibold text-lg border border-primary/30 p-1 rounded-md">
+        <span className="font-semibold text-base border border-primary/30 p-1 rounded-md">
           {format(new Date(rezervare.dataPlecarii), "dd-MM-yyyy")}
         </span>
       </p>
