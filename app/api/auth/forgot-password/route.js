@@ -46,7 +46,10 @@ export async function POST(req) {
     await user.save();
 
     // Link de reset
-    const appUrl = "http://localhost:3000";
+    const appUrl = 
+      process.env.NODE_ENV === "production"
+        ? process.env.NEXT_PUBLIC_APP_URL || "https://cabana-d.ro"
+        : process.env.NEXT_PUBLIC_APP_URL_LOCAL || "http://localhost:3000";
     const resetUrl = `${appUrl}/reset-password?token=${resetToken}`;
 
     // Configurare Nodemailer
