@@ -25,7 +25,14 @@ export async function POST(req) {
     } = await req.json();
 
     // Validare date de intrare
-    if (!userEmail || !userName || !dataSosirii || !dataPlecarii || !numOaspeti || !pretTotal) {
+    if (
+      !userEmail ||
+      !userName ||
+      !dataSosirii ||
+      !dataPlecarii ||
+      !numOaspeti ||
+      !pretTotal
+    ) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
@@ -35,10 +42,10 @@ export async function POST(req) {
     // Validare sumă (trebuie să fie pozitivă și rezonabilă)
     const amount = Number(pretTotal);
     if (isNaN(amount) || amount <= 0 || amount > 10000000) {
-      return new Response(
-        JSON.stringify({ error: "Invalid amount" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Invalid amount" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const session = await stripe.checkout.sessions.create({

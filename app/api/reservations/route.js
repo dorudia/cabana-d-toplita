@@ -13,7 +13,7 @@ const allowedEmails = [
 export async function GET() {
   try {
     const session = await auth();
-    
+
     // Verifică dacă utilizatorul este autentificat și admin
     if (!session?.user || !allowedEmails.includes(session.user.email)) {
       return NextResponse.json(

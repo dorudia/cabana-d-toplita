@@ -30,7 +30,7 @@ export async function GET() {
 
 export async function PATCH(req) {
   const session = await auth();
-  
+
   // Verifică dacă utilizatorul este admin
   if (!session?.user || !allowedEmails.includes(session.user.email)) {
     return NextResponse.json(
