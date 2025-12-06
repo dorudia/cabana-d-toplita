@@ -10,19 +10,28 @@ const allowedEmails = [
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
   
-  // Debug NEXTAUTH_SECRET
-  console.log("Middleware - NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
-  console.log("Middleware - NEXTAUTH_SECRET length:", process.env.NEXTAUTH_SECRET?.length);
-  
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-
-  // Debug logging pentru live
+  // Debug NEXTAUTH_SECRET și cookie
+  console.log("=== MIDDLEWARE DEBUG ===");
   console.log("Middleware - Path:", pathname);
+  console.log("Middleware - NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
+  console.log("Middleware - NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+  console.log("Middleware - Cookies:", req.cookies.getAll().map(c => c.name));
+  
+  const token = await getToken({ 
+    req, 
+    secret: process.env.NEXTAUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === "production"
+  });
+
   console.log("Middleware - Token exists:", !!token);
-  console.log("Middleware - Token keys:", token ? Object.keys(token) : "no token");
-  console.log("Middleware - Token email:", token?.email);
-  console.log("Middleware - Token sub:", token?.sub);
-  console.log("Middleware - Is admin:", token?.email ? allowedEmails.includes(token.email) : false);
+  if (token) {
+    console.log("Middleware - Token keys:", Object.keys(token));
+    console.log("Middleware - Token email:", token.email);
+    console.log("Middleware - Is admin:", allowedEmails.includes(token.email));
+  } else {
+    console.log("Middleware - NO TOKEN - getToken returned null");
+  }
+  console.log("======================");
 
   // Protejează rutele admin
   if (pathname.startsWith("/admin") || pathname.startsWith("/rezervari")) {
