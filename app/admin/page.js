@@ -43,7 +43,6 @@ const Page = () => {
   const getAsyncSettings = async () => {
     setLoading(true);
     const settingsFromDB = await getSettings();
-    console.log({ settingsFromDB });
     setSettings(settingsFromDB);
     setLoading(false);
   };

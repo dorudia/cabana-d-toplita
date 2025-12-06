@@ -61,9 +61,11 @@ function ReservationDatePicker({ isAdmin }) {
   const [range, setRange] = useState({ from: undefined, to: undefined });
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleCheckout = async (reservationData) => {
+    setIsLoading(true);
     try {
       const priceWithDecimals = Math.round(reservationData.pretTotal * 100); // Stripe cere integer
 
@@ -83,15 +85,18 @@ function ReservationDatePicker({ isAdmin }) {
       });
 
       const data = await res.json();
-      console.log("Response from server:", data);
 
       if (data.url) {
         window.location.href = data.url;
       } else {
         console.error("Checkout error:", data.error || "Unknown error");
+        setIsLoading(false);
+        toast.error("Eroare la procesarea plății. Încearcă din nou.");
       }
     } catch (err) {
       console.error("HandleCheckout failed:", err);
+      setIsLoading(false);
+      toast.error("Eroare la procesarea plății. Încearcă din nou.");
     }
   };
 
@@ -319,7 +324,8 @@ function ReservationDatePicker({ isAdmin }) {
           captionLayout="buttons"
           mode="range"
           onSelect={(range) => {
-            if (range?.from && range.from < today) {
+            // Adminii pot selecta date în trecut, userii obișnuiți nu
+            if (!isAdmin && range?.from && range.from < today) {
               toast.error("Nu puteți selecta zile din trecut");
               setRange({ from: undefined, to: undefined });
               return;
@@ -347,8 +353,8 @@ function ReservationDatePicker({ isAdmin }) {
           }}
           selected={displayRange}
           pagedNavigation
-          fromMonth={new Date()}
-          fromDate={new Date()}
+          fromMonth={isAdmin ? undefined : new Date()}
+          fromDate={isAdmin ? undefined : new Date()}
           toDate={new Date().setFullYear(new Date().getFullYear() + 5)}
           locale={ro}
           numberOfMonths={2}
@@ -408,9 +414,10 @@ function ReservationDatePicker({ isAdmin }) {
           )}
           <Button
             onClick={handleAddReservation}
+            disabled={isLoading}
             className="w-fit flex !mx-auto mt-4 text-xl self-center"
           >
-            Rezerva Acum
+            {isLoading ? "Se procesează..." : "Rezerva Acum"}
           </Button>
           <DialogClose asChild>
             <Button className="!bg-transparent absolute top-1 right-1 rounded-full w-fit aspect-square text-slate-800 dark:text-slate-100 hover:!bg-secondary/80 dark:hover:!bg-primary/20 p-2">

@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "../../../lib/db";
 import Setting from "../../../models/Setting";
+import { auth } from "../../lib/auth";
+
+const allowedEmails = [
+  process.env.NEXT_PUBLIC_ADMIN_EMAIL_1,
+  process.env.NEXT_PUBLIC_ADMIN_EMAIL_2,
+];
 
 export async function GET() {
   await dbConnect();
@@ -23,6 +29,16 @@ export async function GET() {
 }
 
 export async function PATCH(req) {
+  const session = await auth();
+  
+  // Verifică dacă utilizatorul este admin
+  if (!session?.user || !allowedEmails.includes(session.user.email)) {
+    return NextResponse.json(
+      { error: "Unauthorized - Admin access required" },
+      { status: 401 }
+    );
+  }
+
   await dbConnect();
 
   const body = await req.json();

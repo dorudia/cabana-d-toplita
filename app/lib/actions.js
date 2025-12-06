@@ -43,8 +43,6 @@ export async function signInWithGoogle() {
 
   if (session?.user) {
     await sendEmail(session.user.name, session.user.email);
-  } else {
-    console.log("No user session found after sign-in.");
   }
 }
 

@@ -24,7 +24,22 @@ export async function POST(req) {
       pretTotal,
     } = await req.json();
 
-    console.log("Creating Stripe session with amount:", pretTotal);
+    // Validare date de intrare
+    if (!userEmail || !userName || !dataSosirii || !dataPlecarii || !numOaspeti || !pretTotal) {
+      return new Response(
+        JSON.stringify({ error: "Missing required fields" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validare sumă (trebuie să fie pozitivă și rezonabilă)
+    const amount = Number(pretTotal);
+    if (isNaN(amount) || amount <= 0 || amount > 10000000) {
+      return new Response(
+        JSON.stringify({ error: "Invalid amount" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -36,7 +51,7 @@ export async function POST(req) {
             product_data: {
               name: `Rezervare: ${dataSosirii} - ${dataPlecarii}`,
             },
-            unit_amount: Number(pretTotal),
+            unit_amount: amount,
           },
           quantity: 1,
         },
@@ -52,7 +67,7 @@ export async function POST(req) {
         description,
         numOaspeti: String(numOaspeti),
         innoptari: String(innoptari),
-        pretTotal: String(pretTotal),
+        pretTotal: String(amount),
       },
     });
 

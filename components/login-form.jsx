@@ -34,10 +34,13 @@ function isValidEmail(email) {
 export function LoginForm({ className, ...props }) {
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
-  const router = useRouter(); // nu merge
-  // const { data: session } = useSession();
+  const router = useRouter();
 
   const [error, setError] = useState(null);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotMessage, setForgotMessage] = useState("");
 
   // useEffect(() => {
   //   console.log("session", session);
@@ -116,6 +119,34 @@ export function LoginForm({ className, ...props }) {
     }
   }
 
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setForgotLoading(true);
+    setForgotMessage("");
+    setError(null);
+
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Eroare la trimiterea emailului");
+      } else {
+        setForgotMessage(data.message);
+        setForgotEmail("");
+      }
+    } catch (err) {
+      setError("Eroare la conectarea cu serverul");
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="shadow-xl dark:bg-slate-900 dark:shadow-lg dark:shadow-slate-500/50 border border-primary/20">
@@ -148,9 +179,7 @@ export function LoginForm({ className, ...props }) {
 
                 <Button
                   onClick={() => {
-                    signInWithGoogle().then(() => {
-                      console.log("????????login with google????????????");
-                    });
+                    signInWithGoogle();
                   }}
                   type="button"
                   href="/api/auth/signin"
@@ -200,12 +229,15 @@ export function LoginForm({ className, ...props }) {
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Your Password</Label>
-                    {/* <a
-                      href="#"
-                      className="ml-auto text-sm underline-offset-4 hover:underline"
-                    >
-                      Forgot your password?
-                    </a> */}
+                    {mode === "login" && (
+                      <button
+                        type="button"
+                        onClick={() => setShowForgotPassword(true)}
+                        className="ml-auto text-sm underline-offset-4 hover:underline"
+                      >
+                        Forgot your password?
+                      </button>
+                    )}
                   </div>
                   <Input
                     id="password"
@@ -241,10 +273,70 @@ export function LoginForm({ className, ...props }) {
           </form>
         </CardContent>
       </Card>
-      {/* <div className="text-balance text-center text-md text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
-      </div> */}
+
+      {/* Dialog Forgot Password */}
+      {showForgotPassword && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-md shadow-xl dark:bg-slate-900">
+            <CardHeader>
+              <CardTitle>Resetare parolă</CardTitle>
+              <CardDescription>
+                Introduceți adresa de email pentru a primi instrucțiuni de
+                resetare.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleForgotPassword} className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="forgotEmail">Email</Label>
+                  <Input
+                    id="forgotEmail"
+                    type="email"
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                    disabled={forgotLoading}
+                  />
+                </div>
+                {forgotMessage && (
+                  <p className="text-sm text-green-600 bg-green-50 dark:bg-green-900/20 p-3 rounded">
+                    {forgotMessage}
+                  </p>
+                )}
+                {error && (
+                  <p className="text-sm text-destructive bg-destructive/10 p-3 rounded">
+                    {error}
+                  </p>
+                )}
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setShowForgotPassword(false);
+                      setForgotEmail("");
+                      setForgotMessage("");
+                      setError(null);
+                    }}
+                    className="flex-1"
+                    disabled={forgotLoading}
+                  >
+                    Anulează
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="flex-1"
+                    disabled={forgotLoading}
+                  >
+                    {forgotLoading ? "Se trimite..." : "Trimite"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

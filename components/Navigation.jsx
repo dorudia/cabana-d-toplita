@@ -13,7 +13,6 @@ import { UserIcon } from "lucide-react";
 const Navigation = ({ session }) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  console.log("🔍user:", session);
 
   const isLinkActive = (href) => {
     if (!pathname) return false;
@@ -34,7 +33,6 @@ const Navigation = ({ session }) => {
   let navUlClasses = isOpen
     ? "flex flex-col absolute top-[58px] left-0 w-[100%] pt-16 bg-secondary h-screen items-center justify-top space-y-4 mx-auto font-geist text-xl "
     : "hidden md:flex items-center justify-between  space-x-7 mx-auto text-2xl ";
-  console.log("navUlClasses", navUlClasses);
 
   let linkClasses = "rounded-md border  hover:border hover:border-primary/40";
 
